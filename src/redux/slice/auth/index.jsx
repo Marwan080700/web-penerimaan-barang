@@ -4,11 +4,13 @@ import { API } from "../../../config/index";
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (userCredentials) => {
-    console.log("this is data usercredentials", userCredentials);
-    const response = await API.post("/login", userCredentials);
-    console.log("this is response from redux", response);
-    localStorage.setItem("user", JSON.stringify(response));
-    return response.data.data;
+    try {
+      const response = await API.post("/login", userCredentials);
+      localStorage.setItem("user", JSON.stringify(response));
+      return response.data.data;
+    } catch (error) {
+      throw error; // Throw the error so that it can be caught in the rejected action
+    }
   }
 );
 
@@ -47,12 +49,7 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.user = null;
-        console.log(action.error.message);
-        if (action.error.message === "request failed") {
-          state.error = "access denided";
-        } else {
-          state.error = action.error.message;
-        }
+        state.error = action.error.message || "Login failed.";
       })
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -67,7 +64,7 @@ const authSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.user = null;
-        state.error = action.error.message;
+        state.error = action.payload || "Registration failed.";
       });
   },
 });

@@ -19,7 +19,7 @@ export const getSalesDetails = createAsyncThunk(
 export const getSalesDetailBySales = createAsyncThunk(
   "salesDetail/getSalesDetail",
   async (id) => {
-    const response = await API.get(`/sales-detail-by-sales/${id}`);
+    const response = await API.get(`/sales/sales-details/${id}`);
     return response.data.data;
   }
 );
@@ -29,16 +29,8 @@ export const addSalesDetail = createAsyncThunk(
   async ({ formData, config }) => {
     try {
       const response = await API.post("/sales-detail", formData, config);
-      toast.success("Add data success", {
-        position: "bottom-right",
-        autoClose: 3000, // Set the duration for the toast to be visible
-      });
       return response.data.data;
     } catch (error) {
-      toast.error("Error adding data", {
-        position: "bottom-right",
-        autoClose: 5000,
-      });
       throw error; // Make sure to re-throw the error so that it can be caught by the component
     }
   }
@@ -50,16 +42,8 @@ export const updateSalesDetail = createAsyncThunk(
     console.log("iniiniin", { id, formData, config });
     try {
       const response = await API.patch(`/sales-detail/${id}`, formData, config);
-      toast.success("Update product success", {
-        position: "bottom-right",
-        autoClose: 3000, // Set the duration for the toast to be visible
-      });
       return response?.data?.data;
     } catch (error) {
-      toast.error("Error updating data", {
-        position: "top-right",
-        autoClose: 5000,
-      });
       throw error;
     }
   }
@@ -69,10 +53,6 @@ export const deleteSalesDetail = createAsyncThunk(
   "salesDetail/deleteSalesDetail",
   async (id) => {
     await API.delete(`/sales-detail/${id}`);
-    toast.success("Delete successfully", {
-      position: "bottom-right",
-      autoClose: 3000, // Set the duration for the toast to be visible
-    });
     return id;
   }
 );

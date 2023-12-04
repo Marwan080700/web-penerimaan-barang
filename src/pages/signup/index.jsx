@@ -22,6 +22,7 @@ const Signup = () => {
     };
 
     dispatch(registerUser(userCredentials)).then((result) => {
+      console.log(result);
       if (result.payload) {
         // If registration is successful
         setUsername("");

@@ -28,7 +28,6 @@ const ModalUpdateData = ({
     const formData = new FormData();
     formData.set("product_category_name", formValue.product_category_name);
     formData.set("desc", formValue.desc);
-    console.log("data updatess", formData);
 
     const config = {
       headers: {

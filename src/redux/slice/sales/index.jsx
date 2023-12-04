@@ -13,6 +13,14 @@ export const getSales = createAsyncThunk("sales/getSales", async () => {
   return response.data.data;
 });
 
+export const getSale = createAsyncThunk(
+  "sales/getSale",
+  async (id) => {
+    const response = await API.get(`/sale/${id}`);
+    return response.data.data;
+  }
+);
+
 // export const getProductsByCategory = createAsyncThunk(
 //   "products/getProductsByCategory",
 //   async (id) => {
@@ -26,7 +34,7 @@ export const addSales = createAsyncThunk(
   async ({ formData, config }) => {
     try {
       const response = await API.post("/sale", formData, config);
-      toast.success("Add product success", {
+      toast.success("Add data success", {
         position: "bottom-right",
         autoClose: 3000, // Set the duration for the toast to be visible
       });
@@ -47,7 +55,7 @@ export const updateSales = createAsyncThunk(
     console.log("iniiniin", { id, formData, config });
     try {
       const response = await API.patch(`/sale/${id}`, formData, config);
-      toast.success("Update product success", {
+      toast.success("Update data success", {
         position: "bottom-right",
         autoClose: 3000, // Set the duration for the toast to be visible
       });
@@ -70,6 +78,18 @@ export const deleteSales = createAsyncThunk("sales/deleteSales", async (id) => {
   return id;
 });
 
+export const cancelSales = createAsyncThunk(
+  "invoces/cancelSales",
+  async (id) => {
+    await API.patch(`/sale/cancel/${id}`);
+    toast.success("Delete successfully", {
+      position: "bottom-right",
+      autoClose: 3000, // Set the duration for the toast to be visible
+    });
+    return id;
+  }
+);
+
 const salesEntity = createEntityAdapter({
   selectId: (sales) => sales.id,
 });
@@ -81,9 +101,9 @@ const salesSlice = createSlice({
     [getSales.fulfilled]: (state, action) => {
       salesEntity.setAll(state, action.payload);
     },
-    // [getProductsByCategory.fulfilled]: (state, action) => {
-    //   salesEntity.setAll(state, action.payload);
-    // },
+    [getSale.fulfilled]: (state, action) => {
+      salesEntity.setAll(state, action.payload);
+    },
     [addSales.fulfilled]: (state, action) => {
       salesEntity.addOne(state, action.payload);
     },
@@ -91,6 +111,12 @@ const salesSlice = createSlice({
       salesEntity.removeOne(state, action.payload);
     },
     [updateSales.fulfilled]: (state, action) => {
+      salesEntity.updateOne(state, {
+        id: action.payload.id,
+        updates: action.payload,
+      });
+    },
+    [cancelSales.fulfilled]: (state, action) => {
       salesEntity.updateOne(state, {
         id: action.payload.id,
         updates: action.payload,

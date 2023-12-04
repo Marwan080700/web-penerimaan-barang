@@ -1,86 +1,36 @@
-import { useDeferredValue, useEffect, useState } from "react";
-import ModalConfirmHapus from "../../../../molecules/modal/modal-confirm-hapus/product";
-import ModalUpdateDataProduct from "../../../../molecules/modal/modal-update/product/product";
-import ModalAddDataProduct from "../../../../molecules/modal/modal-add/product/product";
+import { useState } from "react";
+import ModalAddDataCustomer from "../../../../molecules/modal/modal-add/customer/customer";
+import ModalUpdateDataCustomer from "../../../../molecules/modal/modal-update/customer/customer";
+import ModalConfirmHapusCustomer from "../../../../molecules/modal/modal-confirm-hapus/customer";
+import ModalUpdateDataUser from "../../../../molecules/modal/modal-update/user";
 
-const ModifyProduct = ({
-  handleDelete,
-  handleUpdate,
-  selectedCategory,
-  selectedProduct,
-  triggerProduct,
-  setTriggerProduct,
-}) => {
+const ModifyUser = ({ handleUpdate, selectedUser }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenDeteled, setIsOpenDeleted] = useState(false);
-  const [isOpenAdd, setIsOpenAdd] = useState(false);
-  const [isOpenUpdateProduct, setIsOpenUpdateProduct] = useState(false);
-
+  const [isOpenUpdateUser, setIsOpenUpdateUser] = useState(false);
+  //   const [isOpenDeleteCustomer, setIsOpenDeleteCustomer] = useState(false);
   const toggleOpenDropdown = () => setIsOpen((prevState) => !prevState);
-  const toggleOpenDeleted = () => setIsOpenDeleted((prevState) => !prevState);
-  const toggleOpenAddProduct = () => setIsOpenAdd((prevState) => !prevState);
-  const toggleOpenUpdateProduct = () =>
-    setIsOpenUpdateProduct((prevState) => !prevState);
 
-  useEffect(() => {
-    if (triggerProduct) {
-      setTriggerProduct(false);
-    }
-  }, [triggerProduct]);
+  const toggleOpenUpdateUser = () =>
+    setIsOpenUpdateUser((prevState) => !prevState);
+
+  //   const toggleOpenDeleteCustomer = () =>
+  //     setIsOpenDeleteCustomer((prevState) => !prevState);
+
   return (
     <>
       <div className="relative">
-        {selectedCategory === undefined ? (
-          <>
-            <button
-              type="button"
-              disabled
-              onClick={toggleOpenDropdown}
-              className="bg-slate-300 text-xs text-white py-[0.5rem] px-3 rounded uppercase"
-            >
-              Modify
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={toggleOpenDropdown}
-              className="bg-slate-700 text-xs text-white py-[0.5rem] px-3 rounded uppercase"
-            >
-              Modify
-            </button>
-          </>
-        )}
-
+        <button
+          type="button"
+          onClick={toggleOpenDropdown}
+          className="bg-slate-700 text-xs text-white py-[0.5rem] px-3 rounded uppercase"
+        >
+          Modify
+        </button>
         {isOpen && (
-          <div className="absolute bottom-[-6.9rem] left-[-5.5rem] bg-white border border-gray-300 py-1 px-1 rounded shadow-md z-10 w-[10rem]">
-            <div className="flex items-center gap-2 text-green-500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                />
-              </svg>
-              <button
-                type="button"
-                onClick={toggleOpenAddProduct}
-                className="block my-2"
-              >
-                Insert
-              </button>
-            </div>
-            {selectedProduct ? (
+          <div className="absolute bottom-[-3rem] left-[-5.5rem] bg-white border border-gray-300 py-1 px-1 rounded shadow-md z-10 w-[10rem]">
+            {selectedUser ? (
               <>
-                <div className="flex items-center gap-2 text-red-500">
+                {/* <div className="flex items-center gap-2 text-red-500">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -97,12 +47,12 @@ const ModifyProduct = ({
                   </svg>
                   <button
                     type="button"
-                    onClick={toggleOpenDeleted}
-                    className="block my-2"
+                    // onClick={toggleOpenDeleteCustomer}
+                    className="block my-2 uppercase"
                   >
                     Delete
                   </button>
-                </div>
+                </div> */}
                 <div className="flex items-center gap-2 text-yellow-500">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -120,8 +70,8 @@ const ModifyProduct = ({
                   </svg>
                   <button
                     type="button"
-                    onClick={toggleOpenUpdateProduct}
-                    className="block my-2"
+                    onClick={toggleOpenUpdateUser}
+                    className="block my-2 uppercase"
                   >
                     Update
                   </button>
@@ -129,7 +79,7 @@ const ModifyProduct = ({
               </>
             ) : (
               <>
-                <div className="flex items-center gap-2 text-gray-200">
+                {/* <div className="flex items-center gap-2 text-gray-200">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -147,12 +97,12 @@ const ModifyProduct = ({
                   <button
                     disabled
                     type="button"
-                    onClick={toggleOpenDeleted}
-                    className="block my-2"
+                    // onClick={toggleOpenDeleteCustomer}
+                    className="block my-2 uppercase"
                   >
                     Delete
                   </button>
-                </div>
+                </div> */}
                 <div className="flex items-center gap-2 text-gray-200">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -171,8 +121,8 @@ const ModifyProduct = ({
                   <button
                     disabled
                     type="button"
-                    onClick={toggleOpenUpdateProduct}
-                    className="block my-2"
+                    onClick={toggleOpenUpdateUser}
+                    className="block my-2 uppercase"
                   >
                     Update
                   </button>
@@ -181,26 +131,19 @@ const ModifyProduct = ({
             )}
           </div>
         )}
-        <ModalConfirmHapus
-          handleDelete={handleDelete}
-          toggleOpenDeleted={toggleOpenDeleted}
-          isOpenDeteled={isOpenDeteled}
-        />
-        <ModalAddDataProduct
-          setTriggerProduct={setTriggerProduct}
-          selectedCategory={selectedCategory}
-          toggleOpenAddProduct={toggleOpenAddProduct}
-          isOpenAdd={isOpenAdd}
-        />
-        <ModalUpdateDataProduct
-          selectedCategory={selectedCategory}
-          selectedProduct={selectedProduct}
-          toggleOpenUpdateProduct={toggleOpenUpdateProduct}
-          isOpenUpdateProduct={isOpenUpdateProduct}
+        <ModalUpdateDataUser
+          selectedUser={selectedUser}
           handleUpdate={handleUpdate}
+          toggleOpenUpdateUser={toggleOpenUpdateUser}
+          isOpenUpdateUser={isOpenUpdateUser}
         />
+        {/* <ModalConfirmHapusCustomer
+          handleDelete={handleDelete}
+          toggleOpenDeleteCustomer={toggleOpenDeleteCustomer}
+          isOpenDeleteCustomer={isOpenDeleteCustomer}
+        /> */}
       </div>
     </>
   );
 };
-export default ModifyProduct;
+export default ModifyUser;

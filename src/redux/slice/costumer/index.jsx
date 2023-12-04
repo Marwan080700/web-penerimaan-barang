@@ -64,10 +64,23 @@ export const updateCustomer = createAsyncThunk(
     }
   }
 );
+
 export const deleteCustomer = createAsyncThunk(
   "customer/deleteCustomer",
   async (id) => {
     await API.delete(`/customer/${id}`);
+    toast.success("Delete successfully", {
+      position: "bottom-right",
+      autoClose: 3000, // Set the duration for the toast to be visible
+    });
+    return id;
+  }
+);
+
+export const cancelCustomer = createAsyncThunk(
+  "customer/cancelCustomer",
+  async (id) => {
+    await API.patch(`/customer/cancel/${id}`);
     toast.success("Delete successfully", {
       position: "bottom-right",
       autoClose: 3000, // Set the duration for the toast to be visible
@@ -97,6 +110,12 @@ const customerSlice = createSlice({
       customerEntity.removeOne(state, action.payload);
     },
     [updateCustomer.fulfilled]: (state, action) => {
+      customerEntity.updateOne(state, {
+        id: action.payload.id,
+        updates: action.payload,
+      });
+    },
+    [cancelCustomer.fulfilled]: (state, action) => {
       customerEntity.updateOne(state, {
         id: action.payload.id,
         updates: action.payload,

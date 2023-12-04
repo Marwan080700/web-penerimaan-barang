@@ -1,53 +1,16 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import logo from "../../assets/img/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/slice/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import logo from "../../assets/img/logo.png";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   let userCredentials = {
-  //     username,
-  //     password,
-  //   };
-
-  //   try {
-  //     const result = await dispatch(loginUser(userCredentials));
-
-  //     if (result.payload) {
-  //       setUsername("");
-  //       setPassword("");
-  //       toast.success("Login successfully", {
-  //         position: "bottom-right",
-  //         autoClose: 3000,
-  //       });
-  //       navigate("/dashboard");
-  //     } else {
-  //       // If login fails, clear password field and display error toast
-  //       setPassword("");
-  //       toast.error("Login failed. Please check your credentials.", {
-  //         position: "bottom-right",
-  //         autoClose: 3000,
-  //       });
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     toast.error("An error occurred. Please try again later.", {
-  //       position: "bottom-right",
-  //       autoClose: 3000,
-  //     });
-  //     navigate("/");
-  //   }
-  // };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -59,16 +22,14 @@ const Signin = () => {
 
     dispatch(loginUser(userCredentials)).then((result) => {
       if (result.payload) {
-        // If login is successful
         setUsername("");
         setPassword("");
         toast.success("Login successfully", {
           position: "bottom-right",
           autoClose: 3000,
         });
-        navigate("/dashboard"); // Navigate to the dashboard after successful login
+        navigate("/dashboard");
       } else {
-        // If login fails, display an error toast
         toast.error("Login failed. Please check your credentials.", {
           position: "bottom-right",
           autoClose: 3000,
@@ -78,8 +39,8 @@ const Signin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-200">
-      <div className="w-[25%] bg-white p-8 rounded rounded-xl shadow-2xl">
+    <div className="flex items-center justify-center min-h-screen bg-gray-200">
+      <div className="w-full md:w-[25%] lg:w-[20%] xl:w-[15%] bg-white p-8 rounded-xl shadow-2xl">
         <form action="" onSubmit={handleLogin}>
           <div className="flex items-center justify-center mb-3">
             <img src={logo} alt="logo" width="180px" />
@@ -98,7 +59,7 @@ const Signin = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="border border-gray-300 rounded w-full p-2 text-xs"
-              placeholder="Masukkan username"
+              placeholder="Enter username"
             />
           </div>
           <div className="mb-4">
@@ -115,12 +76,12 @@ const Signin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="border border-gray-300 rounded w-full mb-4 p-2 text-xs"
-              placeholder="Masukkan password"
+              placeholder="Enter password"
             />
           </div>
           <div className="text-end">
             <button
-              class="bg-black hover:bg-gray-500 text-white font-semibold py-2 px-5 border rounded"
+              className="bg-black hover:bg-gray-500 text-white font-semibold py-2 px-5 border rounded"
               type="submit"
             >
               Login
@@ -128,7 +89,7 @@ const Signin = () => {
           </div>
         </form>
         <div className="flex gap-2 text-xs italic mt-3">
-          <p>Didn't Have An Account?</p>
+          <p>Don't have an account?</p>
           <Link to="/signup" className="border-b border-black">
             Click here
           </Link>

@@ -2,6 +2,7 @@ import ReactDataGrid from "@inovua/reactdatagrid-community";
 import "@inovua/reactdatagrid-community/index.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  cancelSales,
   deleteSales,
   getSales,
   salesSelectors,
@@ -12,11 +13,16 @@ import ModifySales from "../../components/atoms/button/modify/modify-sales";
 import {
   getSalesDetailBySales,
   salesDetailSelectors,
+  updateSalesDetail,
 } from "../../redux/slice/sales-detail";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import _ from "lodash";
 // import ModifySales from "../../components/atoms/button/modify/modify-sales";
 
 const Sales = () => {
   const gridStyle = { minHeight: 200 };
+
   const columnSales = [
     {
       name: "delivery_order_number",
@@ -50,10 +56,46 @@ const Sales = () => {
     },
   ];
 
+  const columnSalesDetail = [
+    {
+      name: "qty",
+      header: "Quantity",
+      maxWidth: 1000,
+      defaultFlex: 1,
+    },
+    {
+      name: "price",
+      header: "Price",
+      minWidth: 50,
+      defaultFlex: 2,
+    },
+    {
+      name: "amount",
+      header: "Amount",
+      maxWidth: 1000,
+      defaultFlex: 1,
+    },
+    {
+      name: "desc",
+      header: "Desc",
+      maxWidth: 1000,
+      defaultFlex: 1,
+    },
+    {
+      name: "status",
+      header: "Status",
+      maxWidth: 1000,
+      defaultFlex: 1,
+    },
+  ];
+
   const dispatch = useDispatch();
   const sales = useSelector(salesSelectors.selectAll);
   const [selectedSales, setSelectedSales] = useState(null);
+
   const [filteredSales, setFilteredSales] = useState([]);
+
+  let filterSales = _.filter(filteredSales, ["status", 0]);
   const [searchText, setSearchText] = useState("");
   const gridRef = useRef(null);
   const [enableSelected, setEnableSelected] = useState(true);
@@ -78,15 +120,17 @@ const Sales = () => {
     setSelectedSales(row);
   };
 
-  // const handleDelete = () => {
-  //   dispatch(deleteSales(selectedSales?.data?.id))
-  //     .then(() => {
-  //       console.log("Deletion success"); // Set the flag after deletion
-  //     })
-  //     .catch((error) => {
-  //       console.log("Deletion error:", error);
-  //     });
-  // };
+  const handleDelete = async () => {
+    if (selectedSales?.data?.id) {
+      await dispatch(cancelSales(selectedSales?.data?.id)).then(() => {
+        dispatch(getSales());
+        setSelectedSales(null);
+        dispatch(getSalesDetailBySales(selectedSales?.data?.id));
+      });
+    } else {
+      console.error("No invoice selected for cancelation");
+    }
+  };
 
   const handleUpdate = async (formData, selectedSalesId) => {
     const config = {
@@ -104,11 +148,35 @@ const Sales = () => {
     }
   };
 
+  const handleUpdateSalesDetail = async (formData, selectedSalesDetailId) => {
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    };
+    try {
+      await dispatch(
+        updateSalesDetail({ id: selectedSalesDetailId, formData, config })
+      );
+      console.log("Sales detail updated!");
+      dispatch(getSalesDetailBySales(selectedSales?.data?.id));
+    } catch (error) {
+      console.error("Error updating sales:", error);
+      // Handle the error if necessary
+    }
+  };
+
   const salesDetails = useSelector(salesDetailSelectors.selectAll);
-  console.log("data sales detail", salesDetails);
+
+  let dataSource;
+  if (selectedSales === null) {
+    dataSource = [];
+  } else {
+    dataSource = salesDetails;
+  }
 
   useEffect(() => {
-    if (selectedSales) {
+    if (selectedSales?.data?.id) {
       dispatch(getSalesDetailBySales(selectedSales?.data?.id));
     }
   }, [dispatch, selectedSales]);
@@ -136,86 +204,47 @@ const Sales = () => {
       <div className="mb-1">
         <div className="flex justify-between items-center uppercase text-xs font-semibold mb-2">
           <h3>Sales List</h3>
-          <input
-            type="text"
-            className="border rounded py-2 px-1"
-            placeholder="Cari data..."
-            value={searchText}
-            onChange={onSearchChange}
-          />
+          <div className="flex justify-center items-center gap-2">
+            <input
+              type="text"
+              className="border rounded w-10rem] h-[2rem] px-2"
+              placeholder="Cari data..."
+              value={searchText}
+              onChange={onSearchChange}
+            />
+            <ModifySales
+              setEnableSelected={setEnableSelected}
+              setSelectedSales={setSelectedSales}
+              handleUpdate={handleUpdate}
+              handleUpdateSalesDetail={handleUpdateSalesDetail}
+              selectedSales={selectedSales}
+              salesDetails={salesDetails}
+              handleDelete={handleDelete}
+            />
+          </div>
         </div>
       </div>
       <div className="relative hover:z-50">
         <ReactDataGrid
           idProperty="id"
           columns={columnSales}
-          dataSource={filteredSales ?? []}
+          dataSource={filterSales ?? []}
           style={gridStyle}
           pagination
           onRowClick={handleSalesRowClick}
           enableSelection={enableSelected}
         />
       </div>
-      <div className="flex items-center mt-5 mb-5 gap-4">
-        <ModifySales
-          handleUpdate={handleUpdate}
-          selectedSales={selectedSales}
-          // handleDelete={handleDelete}
+
+      {/* details */}
+      <div className="items-center uppercase text-xs font-semibold mt-6">
+        <h3 className="mb-4">Sales Details</h3>
+        <ReactDataGrid
+          columns={columnSalesDetail}
+          style={gridStyle}
+          dataSource={dataSource ?? []}
         />
       </div>
-      {salesDetails.length > 0 ? (
-        <div className="border rounded w-fit px-2 py-1 shadow-lg">
-          <p className="text-center mb-5">Sales Detail</p>
-          <div className="">
-            {salesDetails.map((detail, index) => (
-              <div key={index} className="text-md">
-                <div className="flex justify-between">
-                  <label htmlFor="" className="me-2">
-                    Description
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={detail?.desc}
-                    className="border rounded mb-2"
-                  />
-                </div>
-                <div className="flex justify-between">
-                  <label htmlFor="" className="me-2">
-                    Quantity
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={detail?.qty}
-                    className="border rounded mb-2"
-                  />
-                </div>
-                <div className="flex justify-between">
-                  <label htmlFor="" className="me-2">
-                    Amount
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={detail?.amount}
-                    className="border rounded mb-2"
-                  />
-                </div>
-                <div className="flex justify-between">
-                  <label htmlFor="" className="me-2">
-                    Price
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={detail?.price}
-                    className="border rounded mb-2"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="text-center mt-5">Details not found</div>
-      )}
     </div>
   );
 };

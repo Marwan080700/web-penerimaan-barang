@@ -3,13 +3,20 @@ import "@inovua/reactdatagrid-community/index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
 import {
+  cancelInvoices,
   deleteInvoices,
   getInvoices,
   invoiceSelectors,
   printInvoice,
+  updateApprove1,
+  updateApprove2,
   updateInvoices,
 } from "../../redux/slice/invoice";
 import ModifyInvoice from "../../components/atoms/button/modify/modify-invoice";
+import _ from "lodash";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Invoice = () => {
   const gridStyle = { minHeight: 200 };
   const columnCustomer = [
@@ -73,12 +80,12 @@ const Invoice = () => {
       maxWidth: 1000,
       defaultWidth: 180,
     },
-    // {
-    //   name: "invoice_description",
-    //   header: "invoice_description",
-    //   maxWidth: 1000,
-    //   defaultWidth: 180,
-    // },
+    {
+      name: "invoice_description",
+      header: "Invoice Description",
+      maxWidth: 1000,
+      defaultWidth: 180,
+    },
     // {
     //   name: "invoice_status",
     //   header: "invoice_status",
@@ -126,7 +133,10 @@ const Invoice = () => {
   const dispatch = useDispatch();
   const invoice = useSelector(invoiceSelectors.selectAll);
   const [selectedInvoices, setSelectedInovices] = useState(null);
-  console.log("id selected", selectedInvoices?.data);
+  // console.log(selectedInvoices?.data?.id);
+  const [enableSelected, getEnableSelected] = useState(true);
+
+  let filterInvoice = _.filter(invoice, ["status", 0]);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
@@ -150,14 +160,14 @@ const Invoice = () => {
     setSelectedInovices(row);
   };
 
-  const handleDelete = () => {
-    dispatch(deleteInvoices(selectedInvoices?.data?.id))
-      .then(() => {
-        console.log("Deletion success"); // Set the flag after deletion
-      })
-      .catch((error) => {
-        console.log("Deletion error:", error);
+  const handleDelete = async () => {
+    if (selectedInvoices?.data?.id) {
+      await dispatch(cancelInvoices(selectedInvoices?.data?.id)).then(() => {
+        dispatch(getInvoices());
       });
+    } else {
+      console.error("No invoice selected for cancelation");
+    }
   };
 
   const handleUpdate = async (formData, selectedInvoicesId) => {
@@ -173,7 +183,40 @@ const Invoice = () => {
         config,
       })
     ).then(() => {
-      console.log("Product category updated!");
+      dispatch(getInvoices());
+    });
+  };
+
+  const handleApprove1 = async (formData, selectedInvoicesId) => {
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    };
+    await dispatch(
+      updateApprove1({
+        id: selectedInvoicesId,
+        formData,
+        config,
+      })
+    ).then(() => {
+      dispatch(getInvoices());
+    });
+  };
+
+  const handleApprove2 = async (formData, selectedInvoicesId) => {
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    };
+    await dispatch(
+      updateApprove2({
+        id: selectedInvoicesId,
+        formData,
+        config,
+      })
+    ).then(() => {
       dispatch(getInvoices());
     });
   };
@@ -208,8 +251,10 @@ const Invoice = () => {
 
   useEffect(() => {
     // Update filteredData when invoice changes
-    setFilteredData(invoice);
-  }, [invoice]);
+    if (filteredData) {
+      setFilteredData(filterInvoice);
+    }
+  }, [filteredData]);
   return (
     <div>
       <div className="border-b border-gray-200 mb-6 uppercase text-sm font-bold py-3">
@@ -219,13 +264,22 @@ const Invoice = () => {
       <div className="mb-1">
         <div className="flex justify-between items-center uppercase text-xs font-semibold mb-2">
           <h3>Invoice List</h3>
-          <input
-            type="text"
-            className="border rounded py-2 px-1"
-            placeholder="Cari data..."
-            value={searchText}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
+          <div className="flex justify-center items-center gap-2">
+            <input
+              type="text"
+              className="border rounded py-2 px-1"
+              placeholder="Cari data..."
+              value={searchText}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+            <ModifyInvoice
+              selectedInvoices={selectedInvoices?.data}
+              handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              handleApprove1={handleApprove1}
+              handleApprove2={handleApprove2}
+            />
+          </div>
         </div>
       </div>
       <div className="relative hover:z-50">
@@ -235,15 +289,12 @@ const Invoice = () => {
           dataSource={filteredData}
           style={gridStyle}
           pagination
+          enableSelection={enableSelected}
           onRowClick={handleInvoicesRowClick}
         />
       </div>
       <div className="flex gap-4 mt-5">
-        <ModifyInvoice
-          selectedInvoices={selectedInvoices?.data}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate}
-        />
+
         {selectedInvoices?.data?.id ? (
           <button
             type="button"

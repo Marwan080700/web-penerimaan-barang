@@ -14,9 +14,11 @@ import {
   getProductCategories,
   deleteProductCategories,
   updateProductCategories,
+  cancelProductCategories,
 } from "../../redux/slice/product-categories";
 import Modify from "../../components/atoms/button/modify/modify-product-categories";
 import ModifyProduct from "../../components/atoms/button/modify/modify-product";
+import _ from "lodash";
 
 const Product = () => {
   const gridStyle = { minHeight: 200 };
@@ -55,7 +57,11 @@ const Product = () => {
   const dispatch = useDispatch();
   const productCategories = useSelector(productCategoriesSelectors.selectAll);
   const products = useSelector(productSelectors.selectAll);
-  console.log("pppan", products);
+  const filteredDataProductCategories = _.filter(productCategories, [
+    "status",
+    0,
+  ]);
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -76,7 +82,7 @@ const Product = () => {
 
     setSearchText(value);
 
-    const newDataSource = productCategories.filter((p) => {
+    const newDataSource = filteredDataProductCategories.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + "").toLowerCase();
         return acc || v.indexOf(value.toLowerCase()) !== -1;
@@ -114,9 +120,10 @@ const Product = () => {
   };
   // product categories=====================
   const handleDelete = () => {
-    dispatch(deleteProductCategories(selectedCategory?.data?.id))
+    dispatch(cancelProductCategories(selectedCategory?.data?.id))
       .then(() => {
         console.log("Deletion success"); // Set the flag after deletion
+        dispatch(getProductCategories());
         dispatch(getProductsByCategory(selectedCategory?.data?.id));
         setSelectedCategory(undefined);
         setEnableSelection(false);
@@ -125,6 +132,7 @@ const Product = () => {
         console.log("Deletion error:", error);
       });
   };
+
   const handleUpdate = async (formData, selectedCategoryId) => {
     const config = {
       headers: {
@@ -158,6 +166,7 @@ const Product = () => {
         console.log("Deletion error:", error);
       });
   };
+
   const handleUpdateProduct = async (formData, selectedProductId) => {
     const config = {
       headers: {
@@ -209,14 +218,14 @@ const Product = () => {
   }, [selectedCategory, products, searchTextProduct]);
 
   useEffect(() => {
-    const filteredCategories = productCategories.filter((p) => {
+    const filteredCategories = filteredDataProductCategories.filter((p) => {
       const values = Object.values(p).map((value) =>
         (value + "").toLowerCase()
       );
       return values.some((v) => v.includes(searchText.toLowerCase()));
     });
     setFilteredProductCategories(filteredCategories);
-  }, [productCategories, searchText]);
+  }, [filteredDataProductCategories, searchText]);
 
   return (
     <>
@@ -228,32 +237,32 @@ const Product = () => {
         <div className="mb-10">
           <div className="flex justify-between items-center uppercase text-xs font-semibold mb-2">
             <h3>Category List</h3>
-            <input
-              type="text"
-              className="border rounded py-2 px-1"
-              placeholder="Cari data..."
-              value={searchText}
-              onChange={onSearchChange}
-            />
+            <div className="flex justify-center items-center gap-2">
+              <input
+                type="text"
+                className="border rounded w-10rem] h-[2rem] px-2"
+                placeholder="Cari data..."
+                value={searchText}
+                onChange={onSearchChange}
+              />
+              <Modify
+                trigger={trigger}
+                setTrigger={setTrigger}
+                selectedCategory={selectedCategory?.data}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
+              />
+            </div>
           </div>
           <div className="relative hover:z-50">
             <ReactDataGrid
               idProperty="id"
               columns={columnProductCategories}
-              dataSource={filteredProductCategories ?? []}
+              dataSource={filteredDataProductCategories ?? []}
               style={gridStyle}
               pagination
               onRowClick={handleCategoryRowClick}
               enableSelection={enableSelection}
-            />
-          </div>
-          <div>
-            <Modify
-              trigger={trigger}
-              setTrigger={setTrigger}
-              selectedCategory={selectedCategory?.data}
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
             />
           </div>
         </div>
@@ -262,13 +271,23 @@ const Product = () => {
         <div>
           <div className="flex justify-between items-center uppercase text-xs font-semibold mb-2">
             <h3>Product List</h3>
-            <input
-              type="text"
-              className="border rounded py-2 px-1"
-              placeholder="Cari data..."
-              value={searchTextProduct}
-              onChange={onSearchChangeProduct}
-            />
+            <div className="flex justify-center items-center gap-2">
+              <input
+                type="text"
+                className="border rounded w-10rem] h-[2rem] px-2"
+                placeholder="Cari data..."
+                value={searchTextProduct}
+                onChange={onSearchChangeProduct}
+              />
+              <ModifyProduct
+                triggerProduct={triggerProduct}
+                setTriggerProduct={setTriggerProduct}
+                selectedCategory={selectedCategory?.data}
+                selectedProduct={selectedProduct?.data}
+                handleDelete={handleDeleteProduct}
+                handleUpdate={handleUpdateProduct}
+              />
+            </div>
           </div>
           <div className="relative hover:z-50">
             <ReactDataGrid
@@ -279,16 +298,6 @@ const Product = () => {
               pagination
               onRowClick={handleCategoryRowClickProduct}
               enableSelection={enableSelectionProduct}
-            />
-          </div>
-          <div>
-            <ModifyProduct
-              triggerProduct={triggerProduct}
-              setTriggerProduct={setTriggerProduct}
-              selectedCategory={selectedCategory?.data}
-              selectedProduct={selectedProduct?.data}
-              handleDelete={handleDeleteProduct}
-              handleUpdate={handleUpdateProduct}
             />
           </div>
         </div>

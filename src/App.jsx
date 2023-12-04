@@ -8,6 +8,7 @@ import Sales from "./pages/sales";
 import Customer from "./pages/customer";
 import Invoice from "./pages/invoices";
 import Signup from "./pages/signup";
+import User from "./pages/user";
 
 function App() {
   return (
@@ -52,6 +53,14 @@ function App() {
           element={
             <Layout>
               <Invoice />
+            </Layout>
+          }
+        ></Route>
+        <Route
+          path="/user"
+          element={
+            <Layout>
+              <User />
             </Layout>
           }
         ></Route>

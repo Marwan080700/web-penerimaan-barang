@@ -21,11 +21,7 @@ const Navigation = () => {
     return user;
   }
 
-  const toggleModal = () => {
-    setIsOpen(!isOpen);
-  };
-
-  console.log("ini rolenya", user?.data);
+  const toggleModal = () => setIsOpen((prevState) => !prevState);
 
   useEffect(() => {
     setUser(getUser());

@@ -71,6 +71,18 @@ export const deleteProductCategories = createAsyncThunk(
   }
 );
 
+export const cancelProductCategories = createAsyncThunk(
+  "productCategories/cancelProductCategories",
+  async (id) => {
+    await API.patch(`/productcategories/cancel/${id}`);
+    toast.success("Delete successfully", {
+      position: "bottom-right",
+      autoClose: 3000, // Set the duration for the toast to be visible
+    });
+    return id;
+  }
+);
+
 const productCategoriesEntity = createEntityAdapter({
   selectId: (product) => product.id,
 });
@@ -89,6 +101,12 @@ const productCategoriesSlice = createSlice({
       productCategoriesEntity.removeOne(state, action.payload);
     },
     [updateProductCategories.fulfilled]: (state, action) => {
+      productCategoriesEntity.updateOne(state, {
+        id: action.payload.id,
+        updates: action.payload,
+      });
+    },
+    [cancelProductCategories.fulfilled]: (state, action) => {
       productCategoriesEntity.updateOne(state, {
         id: action.payload.id,
         updates: action.payload,

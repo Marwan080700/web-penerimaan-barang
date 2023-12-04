@@ -6,6 +6,7 @@ import salesSlice from "../slice/sales/index";
 import customerSlice from "../slice/costumer/index";
 import salesDetailSlice from "../slice/sales-detail/index";
 import invoiceSlice from "../slice/invoice/index";
+import userSlice from "../slice/user/index";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     customer: customerSlice,
     salesDetail: salesDetailSlice,
     invoice: invoiceSlice,
+    user: userSlice,
   },
 });

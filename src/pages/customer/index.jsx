@@ -5,12 +5,14 @@ import { getSales, salesSelectors } from "../../redux/slice/sales";
 import { useEffect, useRef, useState } from "react";
 import ModifySales from "../../components/atoms/button/modify/modify-sales";
 import {
+  cancelCustomer,
   customerSelectors,
   deleteCustomer,
   getCustomer,
   updateCustomer,
 } from "../../redux/slice/costumer";
 import ModifyCustomer from "../../components/atoms/button/modify/modify-customer";
+import _ from "lodash";
 
 const Customer = () => {
   const gridStyle = { minHeight: 200 };
@@ -55,6 +57,7 @@ const Customer = () => {
 
   const dispatch = useDispatch();
   const customer = useSelector(customerSelectors.selectAll);
+  const filteredData = _.filter(customer, ["status", 0]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [enableSelected, setEnableSelected] = useState(true);
   const [filteredCustomer, setFilteredCustomer] = useState([]);
@@ -66,9 +69,10 @@ const Customer = () => {
   };
 
   const handleDelete = () => {
-    dispatch(deleteCustomer(selectedCustomer?.data?.id))
+    dispatch(cancelCustomer(selectedCustomer?.data?.id))
       .then(() => {
-        console.log("Deletion success"); // Set the flag after deletion
+        setSelectedCustomer(null);
+        dispatch(getCustomer());
       })
       .catch((error) => {
         console.log("Deletion error:", error);
@@ -88,7 +92,6 @@ const Customer = () => {
         config,
       })
     ).then(() => {
-      console.log("Product category updated!");
       dispatch(getCustomer());
     });
   };
@@ -98,7 +101,7 @@ const Customer = () => {
 
     setSearchText(value);
 
-    const newDataSource = customer.filter((p) => {
+    const newDataSource = filteredData.filter((p) => {
       return visibleColumns.reduce((acc, col) => {
         const v = (p[col.id] + "").toLowerCase();
         return acc || v.indexOf(value.toLowerCase()) !== -1;
@@ -114,14 +117,14 @@ const Customer = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const filteredCustomer = customer.filter((p) => {
+    const filteredCustomer = filteredData.filter((p) => {
       const values = Object.values(p).map((value) =>
         (value + "").toLowerCase()
       );
       return values.some((v) => v.includes(searchText.toLowerCase()));
     });
     setFilteredCustomer(filteredCustomer);
-  }, [customer, searchText]);
+  }, [filteredData, searchText]);
 
   return (
     <>
@@ -133,20 +136,27 @@ const Customer = () => {
         <div className="mb-1">
           <div className="flex justify-between items-center uppercase text-xs font-semibold mb-2">
             <h3>Customer List</h3>
-            <input
-              type="text"
-              className="border rounded py-2 px-1"
-              placeholder="Cari data..."
-              value={searchText}
-              onChange={onSearchChange}
-            />
+            <div className="flex justify-center items-center gap-2">
+              <input
+                type="text"
+                className="border rounded w-10rem] h-[2rem] px-2"
+                placeholder="Cari data..."
+                value={searchText}
+                onChange={onSearchChange}
+              />
+              <ModifyCustomer
+                selectedCustomer={selectedCustomer?.data}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
+              />
+            </div>
           </div>
         </div>
         <div className="relative hover:z-50">
           <ReactDataGrid
             idProperty="id"
             columns={columnCustomer}
-            dataSource={filteredCustomer ?? []}
+            dataSource={filteredData ?? []}
             style={gridStyle}
             pagination
             onRowClick={handleCustomerRowClick}
@@ -154,11 +164,6 @@ const Customer = () => {
             enableSelection={enableSelected}
           />
         </div>
-        <ModifyCustomer
-          selectedCustomer={selectedCustomer?.data}
-          handleDelete={handleDelete}
-          handleUpdate={handleUpdate}
-        />
       </div>
     </>
   );
