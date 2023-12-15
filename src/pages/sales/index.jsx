@@ -44,12 +44,12 @@ const Sales = () => {
       maxWidth: 1000,
       defaultFlex: 1,
     },
-    {
-      name: "sale_status",
-      header: "Sale Status",
-      maxWidth: 1000,
-      defaultFlex: 1,
-    },
+    // {
+    //   name: "sale_status",
+    //   header: "Sale Status",
+    //   maxWidth: 1000,
+    //   defaultFlex: 1,
+    // },
     {
       name: "total_amount",
       header: "Total Amount",
@@ -83,12 +83,12 @@ const Sales = () => {
       maxWidth: 1000,
       defaultFlex: 1,
     },
-    {
-      name: "status",
-      header: "Status",
-      maxWidth: 1000,
-      defaultFlex: 1,
-    },
+    // {
+    //   name: "status",
+    //   header: "Status",
+    //   maxWidth: 1000,
+    //   defaultFlex: 1,
+    // },
   ];
 
   const dispatch = useDispatch();
