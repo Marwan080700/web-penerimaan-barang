@@ -24,7 +24,7 @@ const ModifyUser = ({ handleUpdate, selectedUser }) => {
           onClick={toggleOpenDropdown}
           className="bg-slate-700 text-xs text-white py-[0.5rem] px-3 rounded uppercase"
         >
-          Modify
+          Action
         </button>
         {isOpen && (
           <div className="absolute bottom-[-3rem] left-[-5.5rem] bg-white border border-gray-300 py-1 px-1 rounded shadow-md z-10 w-[10rem]">

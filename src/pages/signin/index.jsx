@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/slice/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import logo from "../../assets/img/logo.png";
+import logo from "../../assets/img/logo-arwana.png";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
@@ -40,10 +40,14 @@ const Signin = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="w-full md:w-[25%] lg:w-[20%] xl:w-[15%] bg-white p-8 rounded-xl shadow-2xl">
+      <div className="w-full md:w-[40%] lg:w-[30%] xl:w-[25%] bg-white p-8 rounded-xl shadow-2xl">
         <form action="" onSubmit={handleLogin}>
           <div className="flex items-center justify-center mb-3">
-            <img src={logo} alt="logo" width="180px" />
+            <img src={logo} alt="logo" width="120px" />
+          </div>
+          <div className="text-xs italic mb-2">
+            {" "}
+            <p>Sign in to your account</p>
           </div>
           <div className="mb-6">
             <label

@@ -11,6 +11,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import ModifySales from "../../components/atoms/button/modify/modify-sales";
 import {
+  deleteSalesDetail,
   getSalesDetailBySales,
   salesDetailSelectors,
   updateSalesDetail,
@@ -18,6 +19,7 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import _ from "lodash";
+import ModifySalesDetail from "../../components/atoms/button/modify/modify-sales-detail";
 // import ModifySales from "../../components/atoms/button/modify/modify-sales";
 
 const Sales = () => {
@@ -92,6 +94,8 @@ const Sales = () => {
   const dispatch = useDispatch();
   const sales = useSelector(salesSelectors.selectAll);
   const [selectedSales, setSelectedSales] = useState(null);
+  const [selectedSalesDetail, setSelectedSalesDetail] = useState(null);
+  console.log("ssss", selectedSalesDetail);
 
   const [filteredSales, setFilteredSales] = useState([]);
 
@@ -99,6 +103,7 @@ const Sales = () => {
   const [searchText, setSearchText] = useState("");
   const gridRef = useRef(null);
   const [enableSelected, setEnableSelected] = useState(true);
+  const [enableSelectedDetail, setEnableSelectedDetail] = useState(true);
 
   const onSearchChange = ({ target: { value } }) => {
     const visibleColumns = gridRef.current?.visibleColumns || [];
@@ -120,6 +125,10 @@ const Sales = () => {
     setSelectedSales(row);
   };
 
+  const handleSalesRowClickSalesDetail = (row) => {
+    setSelectedSalesDetail(row);
+  };
+
   const handleDelete = async () => {
     if (selectedSales?.data?.id) {
       await dispatch(cancelSales(selectedSales?.data?.id)).then(() => {
@@ -128,7 +137,7 @@ const Sales = () => {
         dispatch(getSalesDetailBySales(selectedSales?.data?.id));
       });
     } else {
-      console.error("No invoice selected for cancelation");
+      console.error("No Sales selected for cancelation");
     }
   };
 
@@ -145,6 +154,19 @@ const Sales = () => {
     } catch (error) {
       console.error("Error updating sales:", error);
       // Handle the error if necessary
+    }
+  };
+
+  const handleDeleteSalesDetail = async () => {
+    if (selectedSales?.data?.id) {
+      await dispatch(deleteSalesDetail(selectedSalesDetail?.data?.id)).then(
+        () => {
+          dispatch(getSalesDetailBySales(selectedSales?.data?.id));
+          setSelectedSalesDetail(null);
+        }
+      );
+    } else {
+      console.error("No SalesDetail selected for cancelation");
     }
   };
 
@@ -238,12 +260,26 @@ const Sales = () => {
 
       {/* details */}
       <div className="items-center uppercase text-xs font-semibold mt-6">
-        <h3 className="mb-4">Sales Details</h3>
-        <ReactDataGrid
-          columns={columnSalesDetail}
-          style={gridStyle}
-          dataSource={dataSource ?? []}
-        />
+        <div className="flex justify-between items-center mb-2">
+          <h3>Sales Details</h3>
+          <ModifySalesDetail
+            handleUpdate={handleUpdate}
+            handleDeleteSalesDetail={handleDeleteSalesDetail}
+            handleUpdateSalesDetail={handleUpdateSalesDetail}
+            selectedSales={selectedSales}
+            selectedSalesDetail={selectedSalesDetail}
+          />
+        </div>
+        <div className="relative hover:z-50">
+          <ReactDataGrid
+            columns={columnSalesDetail}
+            style={gridStyle}
+            dataSource={dataSource ?? []}
+            onRowClick={handleSalesRowClickSalesDetail}
+            pagination
+            enableSelection={enableSelectedDetail}
+          />
+        </div>
       </div>
     </div>
   );

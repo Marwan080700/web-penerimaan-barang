@@ -53,6 +53,10 @@ export const deleteSalesDetail = createAsyncThunk(
   "salesDetail/deleteSalesDetail",
   async (id) => {
     await API.delete(`/sales-detail/${id}`);
+    toast.success("Delete data success", {
+      position: "bottom-right",
+      autoClose: 3000, // Set the duration for the toast to be visible
+    });
     return id;
   }
 );

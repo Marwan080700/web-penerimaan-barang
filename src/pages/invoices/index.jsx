@@ -16,8 +16,15 @@ import ModifyInvoice from "../../components/atoms/button/modify/modify-invoice";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Document, Page } from "react-pdf";
+import { setPdfData } from "../../redux/slice/invoice";
+import { pdfjs } from 'react-pdf';
+
+
 
 const Invoice = () => {
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
   const gridStyle = { minHeight: 200 };
   const columnCustomer = [
     {
@@ -131,6 +138,8 @@ const Invoice = () => {
   ];
 
   const dispatch = useDispatch();
+  const pdfData = useSelector((state) => state.invoice.pdfData);
+  // console.log("pdfData", pdfData)
   const invoice = useSelector(invoiceSelectors.selectAll);
   const [selectedInvoices, setSelectedInovices] = useState(null);
   // console.log(selectedInvoices?.data?.id);
@@ -139,6 +148,9 @@ const Invoice = () => {
   let filterInvoice = _.filter(invoice, ["status", 0]);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+
 
   const handleSearch = useCallback(
     (text) => {
@@ -155,6 +167,15 @@ const Invoice = () => {
     },
     [invoice]
   );
+
+  const blobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
   const handleInvoicesRowClick = (row) => {
     setSelectedInovices(row);
@@ -221,29 +242,52 @@ const Invoice = () => {
     });
   };
 
+  const onDocumentLoadSuccess = (document) => {
+    const { numPages } = document;
+    setNumPages(numPages);
+  };
+
+
+  const onDocumentLoadError = (error) => {
+    console.error("Error loading document:", error);
+  };
+
   const handlePrint = async () => {
     if (selectedInvoices?.data?.id) {
       try {
-        const response = await dispatch(
-          printInvoice(selectedInvoices?.data?.id)
-        );
+        // Use Fetch API to download the PDF
+        const response = await fetch(`/invoices/print/${selectedInvoices?.data?.id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/pdf',
+          },
+        });
 
-        // Assuming the response contains the PDF data or URL
-        const pdfData = response.data;
+        if (!response.ok) {
+          console.error("Failed to download PDF:", response.statusText);
+          return;
+        }
 
-        // Create a Blob from the PDF data
-        const blob = new Blob([pdfData], { type: "application/pdf" });
+        // Convert the response to a Blob
+        const pdfBlob = await response.blob();
 
-        // Create a URL for the Blob
-        const pdfUrl = URL.createObjectURL(blob);
-
-        // Open the PDF in a new window or tab
-        window.open(pdfUrl, "_blank");
+        // Create a Blob URL and trigger download
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'invoice.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
       } catch (error) {
-        console.log("Print error:", error);
+        console.error("Print error:", error);
       }
     }
   };
+
+
+
 
   useEffect(() => {
     dispatch(getInvoices());
@@ -255,6 +299,7 @@ const Invoice = () => {
       setFilteredData(filterInvoice);
     }
   }, [filteredData]);
+
   return (
     <div>
       <div className="border-b border-gray-200 mb-6 uppercase text-sm font-bold py-3">
@@ -294,7 +339,6 @@ const Invoice = () => {
         />
       </div>
       <div className="flex gap-4 mt-5">
-
         {selectedInvoices?.data?.id ? (
           <button
             type="button"
@@ -314,6 +358,21 @@ const Invoice = () => {
           </button>
         )}
       </div>
+      {/* PDF Viewer */}
+      {pdfData && (
+        <div className="mt-4">
+          <Document
+            file={`data:application/pdf;base64,${pdfData}`}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onDocumentLoadError}
+          >
+            <Page pageNumber={pageNumber} />
+          </Document>
+          <p>
+            Page {pageNumber} of {numPages}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

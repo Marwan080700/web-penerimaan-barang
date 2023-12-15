@@ -14,7 +14,7 @@ const ModalAddDataProduct = ({
     product_identity: "",
     product_name: "",
     product_category_id: selectedCategory?.id,
-    unit: 0,
+    unit: "",
     price: 0,
     desc: "",
   });
@@ -111,7 +111,7 @@ const ModalAddDataProduct = ({
               Unit:
             </label>
             <input
-              type="number"
+              type="text"
               id="unit"
               name="unit"
               value={formValueProduct?.unit}

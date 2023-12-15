@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../redux/slice/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import logo from "../../assets/img/logo-arwana.png";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -45,10 +46,14 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
-      <div className="w-[25%] bg-white p-8 rounded rounded-xl shadow-2xl">
+      <div className="w-full md:w-[40%] lg:w-[30%] xl:w-[25%] bg-white p-8 rounded rounded-xl shadow-2xl">
         <form action="" onSubmit={handleSignup}>
-          <div className="text-center font-bold mb-5">
-            <h1>Register</h1>
+          <div className="flex items-center justify-center mb-3">
+            <img src={logo} alt="logo" width="120px" />
+          </div>
+          <div className="text-xs italic mb-2">
+            {" "}
+            <p>Sign up to register account</p>
           </div>
           <div className="mb-6">
             <label

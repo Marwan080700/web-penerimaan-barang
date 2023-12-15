@@ -81,46 +81,51 @@ const ModalApprove1 = ({
                                 <option value="" hidden>
                                     select Approve
                                 </option>
-                                <option value="not ok" className="text-xs">
-                                    Not Ok
+                                <option value="reject" className="text-xs">
+                                    Reject
                                 </option>
                                 <option value="ok" className="text-xs">
                                     Ok
                                 </option>
                             </select>
                         </div>
-                        <div className="">
-                            <label
-                                htmlFor="approve_1_date"
-                                className="block text-sm font-semibold mb-2"
-                            >
-                                Approve 1 Date:
-                            </label>
-                            <input
-                                type="date"
-                                id="approve_1_date"
-                                name="approve_1_date"
-                                value={formValueInvoice?.approve_1_date}
-                                onChange={handleChangeInvoice}
-                                className="border rounded w-full mb-4 py-2 py-2"
-                            />
-                        </div>
-                        <div className="">
-                            <label
-                                htmlFor="approve_1_desc"
-                                className="block text-sm font-semibold mb-2"
-                            >
-                                Approve 1 Description:
-                            </label>
-                            <input
-                                type="text"
-                                id="approve_1_desc"
-                                name="approve_1_desc"
-                                value={formValueInvoice?.approve_1_desc}
-                                onChange={handleChangeInvoice}
-                                className="border rounded w-full mb-4 py-2 py-2"
-                            />
-                        </div>
+                        {
+                            formValueInvoice?.approve_1 === "reject" ? (<>
+                                {/* <div className="">
+                                    <label
+                                        htmlFor="approve_1_date"
+                                        className="block text-sm font-semibold mb-2"
+                                    >
+                                        Approve 1 Date:
+                                    </label>
+                                    <input
+                                        type="date"
+                                        id="approve_1_date"
+                                        name="approve_1_date"
+                                        value={formValueInvoice?.approve_1_date}
+                                        onChange={handleChangeInvoice}
+                                        className="border rounded w-full mb-4 py-2 py-2"
+                                    />
+                                </div> */}
+                                <div className="">
+                                    <label
+                                        htmlFor="approve_1_desc"
+                                        className="block text-sm font-semibold mb-2"
+                                    >
+                                        Approve 1 Description:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="approve_1_desc"
+                                        name="approve_1_desc"
+                                        value={formValueInvoice?.approve_1_desc}
+                                        onChange={handleChangeInvoice}
+                                        className="border rounded w-full mb-4 py-2 py-2"
+                                    />
+                                </div>
+                            </>) : (<></>)
+                        }
+
                     </div>
                     <div className="flex justify-end">
                         <button

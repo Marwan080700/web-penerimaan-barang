@@ -93,24 +93,15 @@ const ModalUpdateDataSales = ({
     salesFormData.append("sale_status", formValue?.sale_status);
     salesFormData.append("total_amount", formValue?.total_amount);
 
-    const salesDetailFormData = new FormData();
-    salesDetailFormData.append("sale_id", selectedSales?.data?.id);
-    salesDetailFormData.append("product_id", formValue.product_id);
-    salesDetailFormData.append("qty", formValue.qty);
-    salesDetailFormData.append("price", formValue.price);
-    salesDetailFormData.append("amount", formValue.amount);
-    salesDetailFormData.append("desc", formValue.desc);
-    salesDetailFormData.append("status", formValue.status);
-
     const config = {
       headers: {
         "Content-type": "multipart/form-data",
       },
     };
 
+
     // Assuming handleUpdate and handleUpdateSalesDetail are functions that handle the updates on the server side
     handleUpdate(salesFormData, selectedSales?.data?.id, config);
-    handleUpdateSalesDetail(salesDetailFormData, salesDetails[0]?.id, config);
 
     toggleOpenUpdateSales();
     setSelectedSales(null);
@@ -122,13 +113,12 @@ const ModalUpdateDataSales = ({
       onClick={handleOverlayClick}
     >
       <div
-        className="bg-white p-6 rounded shadow-md w-[70%] h-[95%]"
+        className="bg-white p-6 rounded shadow-md w-fit h-fit"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-2xl mb-4">Update Data Sales</h2>
-        <form onSubmit={onSubmitUpdate}>
-          <div className="flex justify-center gap-5">
-            <div className="border rounded px-2 py-5 relative w-[60%]">
+        <form onSubmit={onSubmitUpdate} className="w-[30rem]">
+            <div className="border rounded px-2 py-5 relative w-[1--%]">
               <h3 className="absolute top-[-0.7rem] bg-white px-2">Sales</h3>
               <div>
                 <label
@@ -242,134 +232,17 @@ const ModalUpdateDataSales = ({
                 <input
                   type="number"
                   min={0}
+                  disabled
                   id="total_amount"
                   name="total_amount"
                   value={formValue?.total_amount}
                   onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
+                  className="border rounded w-full py-1 px-1 bg-slate-300"
                 />
               </div>
             </div>
-            <div className="border rounded px-2 py-5 relative w-[40%] h-[25rem]">
-              <h3 className="absolute top-[-0.7rem] bg-white px-2">
-                Sales Detail
-              </h3>
-              <div className="mb-4">
-                <label
-                  htmlFor="product_id"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Product:
-                </label>
-                <select
-                  id="product_id"
-                  name="product_id"
-                  value={formValue?.product_id}
-                  onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
-                >
-                  <option value="" hidden className="text-xs">
-                    Select Product
-                  </option>
-                  {products.map((products) => (
-                    <option
-                      key={products.id}
-                      value={products?.id}
-                      className="text-xs"
-                    >
-                      {products?.product_name}
-                      {/* Replace 'name' with the actual property name in your 'customer' object */}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="qty"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Quantity:
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  id="qty"
-                  name="qty"
-                  value={formValue?.qty}
-                  onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="price"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Price:
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  id="price"
-                  name="price"
-                  value={formValue?.price}
-                  onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="amount"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Amount:
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  id="amount"
-                  name="amount"
-                  value={formValue?.amount}
-                  onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="desc"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Description:
-                </label>
-                <input
-                  type="text"
-                  id="desc"
-                  name="desc"
-                  value={formValue?.desc}
-                  onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="status"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Status:
-                </label>
-                <input
-                  type="text"
-                  id="status"
-                  name="status"
-                  value={formValue?.status}
-                  onChange={handleChangeSales}
-                  className="border rounded w-full py-1 px-1"
-                />
-              </div>
-            </div>
-          </div>
 
-          <div className="flex justify-end gap-2 mt-2">
+          <div className="flex justify-end gap-2 mt-5">
             <button
               type="button"
               onClick={toggleOpenUpdateSales}

@@ -30,9 +30,6 @@ const ModalAddDataSales = ({
     return user;
   }
 
-  const dispatch = useDispatch();
-  const customers = useSelector(customerSelectors.selectAll);
-  const products = useSelector(productSelectors.selectAll);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [formValue, setFormValue] = useState({
     delivery_order_number: "",
@@ -41,16 +38,25 @@ const ModalAddDataSales = ({
     sale_date: "",
     sale_description: "",
     sale_status: "",
-    total_amount: "",
-    sales_id: selectedSales?.data?.id,
-    product_id: "",
-    qty: "",
-    price: "",
-    amount: "",
-    desc: "",
-    status: "",
+    total_amount: 0,
+    // sales_id: selectedSales?.data?.id,
+    // product_id: "",
+    // qty: "",
+    // price: "",
+    // amount: "",
+    // desc: "",
+    // status: "",
   });
-  console.log("adding data", formValue);
+  console.log(formValue);
+
+  const dispatch = useDispatch();
+  const customers = useSelector(customerSelectors.selectAll);
+  const products = useSelector(productSelectors.selectAll);
+  const selectedProduct = useSelector((state) =>
+    productSelectors.selectById(state, formValue?.product_id)
+  );
+
+  console.log(selectedProduct?.price);
 
   const handleChange = (e) => {
     setFormValue({
@@ -90,36 +96,34 @@ const ModalAddDataSales = ({
     salesFormData.set("sale_date", formValue?.sale_date);
     salesFormData.set("sale_description", formValue?.sale_description);
     salesFormData.set("sale_status", formValue?.sale_status);
-    salesFormData.set("total_amount", formValue?.qty * formValue?.price);
+    salesFormData.set("total_amount", formValue?.total_amount);
 
-    const salesResponse = await dispatch(
-      addSales({ formData: salesFormData, config: salesConfig })
-    );
+    await dispatch(addSales({ formData: salesFormData, config: salesConfig }));
 
     // Assuming sales creation was successful
-    if (salesResponse.payload) {
-      const salesDetailConfig = {
-        headers: {
-          "Content-type": "multipart/form-data",
-        },
-      };
+    // if (salesResponse.payload) {
+    //   const salesDetailConfig = {
+    //     headers: {
+    //       "Content-type": "multipart/form-data",
+    //     },
+    //   };
 
-      const salesDetailFormData = new FormData();
-      salesDetailFormData.set("sale_id", salesResponse?.payload?.id);
-      salesDetailFormData.set("product_id", formValue?.product_id);
-      salesDetailFormData.set("qty", formValue?.qty);
-      salesDetailFormData.set("price", formValue?.price);
-      salesDetailFormData.set("amount", formValue?.qty * formValue?.price);
-      salesDetailFormData.set("desc", formValue?.desc);
-      salesDetailFormData.set("status", formValue?.status);
+    //   const salesDetailFormData = new FormData();
+    //   salesDetailFormData.set("sale_id", salesResponse?.payload?.id);
+    //   salesDetailFormData.set("product_id", formValue?.product_id);
+    //   salesDetailFormData.set("qty", formValue?.qty);
+    //   salesDetailFormData.set("price", selectedProduct?.price);
+    //   salesDetailFormData.set("amount", formValue?.qty * formValue?.price);
+    //   salesDetailFormData.set("desc", formValue?.desc);
+    //   salesDetailFormData.set("status", formValue?.status);
 
-      await dispatch(
-        addSalesDetail({
-          formData: salesDetailFormData,
-          config: salesDetailConfig,
-        })
-      );
-    }
+    //   await dispatch(
+    //     addSalesDetail({
+    //       formData: salesDetailFormData,
+    //       config: salesDetailConfig,
+    //     })
+    //   );
+    // }
 
     // Handle any necessary state updates or UI changes after adding data
     toggleAddSales();
@@ -137,14 +141,14 @@ const ModalAddDataSales = ({
       onClick={handleOverlayClick}
     >
       <div
-        className="bg-white p-6 rounded shadow-md w-[70%] h-[95%]"
+        className="bg-white p-6 rounded shadow-md w-[50%] h-[65%]"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-2xl mb-4">Add Data Sales</h2>
         <form onSubmit={handleAdd}>
           <div className="flex justify-center gap-5">
-            <div className="border rounded px-2 py-5 relative w-[60%]">
-              <h3 className="absolute top-[-0.7rem] bg-white px-2">Sales</h3>
+            <div className="border rounded px-2 py-5 relative w-full">
+              {/* <h3 className="absolute top-[-0.7rem] bg-white px-2">Sales</h3> */}
               <div>
                 <label
                   htmlFor="delivery_order_number"
@@ -269,18 +273,16 @@ const ModalAddDataSales = ({
                   min={0}
                   id="total_amount"
                   name="total_amount"
-                  value={formValue?.qty * formValue?.price}
+                  placeholder="Total amount auto fill if has SalesDetail"
+                  value={formValue?.total_amount === 0}
                   onChange={handleChange}
                   className="border rounded w-full py-1 px-1 bg-slate-300"
                   required
                   disabled
                 />
               </div>
-              <div className="text-xs italic text-red-500 normal-case">
-                <p>Total amount from (qty * price)</p>
-              </div>
             </div>
-            <div className="border rounded px-2 py-5 relative w-[40%] h-[20rem]">
+            {/* <div className="border rounded px-2 py-5 relative w-[40%] h-[25rem]">
               <h3 className="absolute top-[-0.7rem] bg-white px-2">
                 Sales Detail
               </h3>
@@ -310,10 +312,10 @@ const ModalAddDataSales = ({
                     >
                       {products?.product_name}
                       {/* Replace 'name' with the actual property name in your 'customer' object */}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* </option> */}
+            {/* ))} */}
+            {/* </select> */}
+            {/* </div>
               <div className="mb-4">
                 <label
                   htmlFor="qty"
@@ -344,9 +346,10 @@ const ModalAddDataSales = ({
                   min={0}
                   id="price"
                   name="price"
-                  value={formValue?.price}
+                  disabled
+                  value={selectedProduct?.price}
                   onChange={handleChange}
-                  className="border rounded w-full py-1 px-1"
+                  className="border rounded w-full py-1 px-1 bg-slate-300"
                   required
                 />
               </div>
@@ -363,7 +366,7 @@ const ModalAddDataSales = ({
                   disabled
                   id="amount"
                   name="amount"
-                  value={formValue?.qty * formValue?.price}
+                  value={formValue?.qty * selectedProduct?.price}
                   onChange={handleChange}
                   className="border rounded w-full py-1 px-1 bg-slate-300"
                   required
@@ -403,7 +406,7 @@ const ModalAddDataSales = ({
                   required
                 />
               </div>
-            </div>
+            </div>*/}
           </div>
 
           <div className="flex justify-end gap-2 mt-2">
@@ -415,34 +418,36 @@ const ModalAddDataSales = ({
               Close
             </button>
             {formValue?.delivery_order_number === "" ||
-              formValue?.customer_id === "" ||
-              formValue?.user_id === "" ||
-              formValue?.sale_date === "" ||
-              formValue?.sale_description === "" ||
-              formValue?.sale_status === "" ||
-              formValue?.sales_id === "" ||
-              formValue?.product_id === "" ||
-              formValue?.qty === "" ||
-              formValue?.price === "" ||
-              formValue?.desc === "" ||
-              formValue?.status === "" ? (
+            formValue?.customer_id === "" ||
+            formValue?.user_id === "" ||
+            formValue?.sale_date === "" ||
+            formValue?.sale_description === "" ||
+            formValue?.sale_status === "" ? (
+              // formValue?.sales_id === "" ||
+              // formValue?.product_id === "" ||
+              // formValue?.qty === "" ||
+              // formValue?.price === "" ||
+              // formValue?.desc === "" ||
+              // formValue?.status === ""
               <>
                 <button
                   type="submit"
+                  disabled
                   className="bg-slate-200 text-white px-5 py-2 rounded text-xs uppercase"
                 >
                   Add
                 </button>
               </>
-            ) : (<>
-              <button
-                type="submit"
-                className="bg-green-500 text-white px-5 py-2 rounded text-xs uppercase"
-              >
-                Add
-              </button>
-            </>)}
-
+            ) : (
+              <>
+                <button
+                  type="submit"
+                  className="bg-green-500 text-white px-5 py-2 rounded text-xs uppercase"
+                >
+                  Add
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>

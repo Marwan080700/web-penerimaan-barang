@@ -38,7 +38,7 @@ const ModifyProduct = ({
               onClick={toggleOpenDropdown}
               className="bg-slate-300 text-xs text-white py-[0.5rem] px-3 rounded uppercase"
             >
-              Modify
+              Action
             </button>
           </>
         ) : (
