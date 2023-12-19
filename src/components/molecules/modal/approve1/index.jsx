@@ -22,11 +22,33 @@ const ModalApprove1 = ({
         return user;
     }
 
+    const getCurrentDateTime = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const currentDate = `${year}-${month}-${day}`;
+
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const time = `${hours}:${minutes}`;
+
+        return `${currentDate}T${time}`;
+    };
+
     const [formValueInvoice, setFormValueInvoice] = useState({
-        approve_1: selectedInvoices?.approve_1 || "",
-        approve_1_date: selectedInvoices?.approve_1_date || "",
+        approve_1: "ok",
+        approve_1_date: getCurrentDateTime(), // Set the initial value to the current date and time
         approve_1_desc: selectedInvoices?.approve_1_date || "",
     });
+
+    useEffect(() => {
+        // Update the state with the current date and time when the component is loaded
+        setFormValueInvoice((prevFormValue) => ({
+            ...prevFormValue,
+            approve_1_date: getCurrentDateTime(),
+        }));
+    }, []);
 
     const handleChangeInvoice = (e) => {
         const { name, value } = e.target;
@@ -34,7 +56,6 @@ const ModalApprove1 = ({
             ...prevFormValue,
             [name]: value,
         }));
-
     };
 
 
@@ -63,7 +84,7 @@ const ModalApprove1 = ({
                 <h2 className="text-2xl mb-4 py-[0.1rem]">Approve 1</h2>
                 <form onSubmit={submitApprove1}>
                     <div>
-                        <div className="">
+                        {/* <div className="">
                             <label
                                 htmlFor="approve_1"
                                 className="block text-sm font-semibold mb-2"
@@ -88,43 +109,43 @@ const ModalApprove1 = ({
                                     Ok
                                 </option>
                             </select>
+                        </div> */}
+                        {/* {
+                            formValueInvoice?.approve_1 === "reject" ? (<> */}
+                        <div className="">
+                            <label
+                                htmlFor="approve_1_date"
+                                className="block text-sm font-semibold mb-2"
+                            >
+                                Approve 1 Date:
+                            </label>
+                            <input
+                                type="datetime-local"
+                                id="approve_1_date"
+                                name="approve_1_date"
+                                value={formValueInvoice?.approve_1_date}
+                                onChange={handleChangeInvoice}
+                                className="border rounded w-full mb-4 py-2 py-2"
+                            />
                         </div>
-                        {
-                            formValueInvoice?.approve_1 === "reject" ? (<>
-                                {/* <div className="">
-                                    <label
-                                        htmlFor="approve_1_date"
-                                        className="block text-sm font-semibold mb-2"
-                                    >
-                                        Approve 1 Date:
-                                    </label>
-                                    <input
-                                        type="date"
-                                        id="approve_1_date"
-                                        name="approve_1_date"
-                                        value={formValueInvoice?.approve_1_date}
-                                        onChange={handleChangeInvoice}
-                                        className="border rounded w-full mb-4 py-2 py-2"
-                                    />
-                                </div> */}
-                                <div className="">
-                                    <label
-                                        htmlFor="approve_1_desc"
-                                        className="block text-sm font-semibold mb-2"
-                                    >
-                                        Approve 1 Description:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="approve_1_desc"
-                                        name="approve_1_desc"
-                                        value={formValueInvoice?.approve_1_desc}
-                                        onChange={handleChangeInvoice}
-                                        className="border rounded w-full mb-4 py-2 py-2"
-                                    />
-                                </div>
-                            </>) : (<></>)
-                        }
+                        <div className="">
+                            <label
+                                htmlFor="approve_1_desc"
+                                className="block text-sm font-semibold mb-2"
+                            >
+                                Approve 1 Description:
+                            </label>
+                            <input
+                                type="text"
+                                id="approve_1_desc"
+                                name="approve_1_desc"
+                                value={formValueInvoice?.approve_1_desc}
+                                onChange={handleChangeInvoice}
+                                className="border rounded w-full mb-4 py-2 py-2"
+                            />
+                        </div>
+                        {/* </>) : (<></>)
+                        } */}
 
                     </div>
                     <div className="flex justify-end">

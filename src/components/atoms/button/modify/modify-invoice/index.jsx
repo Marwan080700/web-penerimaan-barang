@@ -128,7 +128,7 @@ const ModifyInvoice = ({
                 </div>
 
                 {user?.data?.data?.user?.role === "superadmin" ||
-                user?.data?.data?.user?.role === "kabag" ? (
+                  user?.data?.data?.user?.role === "kabag" ? (
                   <div className="flex items-center gap-2  text-green-500">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@ const ModifyInvoice = ({
                 )}
 
                 {user?.data?.data?.user?.role === "superadmin" ||
-                user?.data?.data?.user?.role === "manager" ? (
+                  user?.data?.data?.user?.role === "manager" ? (
                   <div className="flex items-center gap-2  text-green-500">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -238,7 +238,7 @@ const ModifyInvoice = ({
                 </div>
 
                 {user?.data?.data?.user?.role === "superadmin" ||
-                user?.data?.data?.user?.role === "kabag" ? (
+                  user?.data?.data?.user?.role === "kabag" ? (
                   <div className="flex items-center gap-2  text-gray-200">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +261,7 @@ const ModifyInvoice = ({
                       onClick={toggleOpenApprove1}
                       className="block my-2 uppercase"
                     >
-                      Approve 1
+                      Approve Level 1
                     </button>
                   </div>
                 ) : (
@@ -269,7 +269,7 @@ const ModifyInvoice = ({
                 )}
 
                 {user?.data?.data?.user?.role === "superadmin" ||
-                user?.data?.data?.user?.role === "manager" ? (
+                  user?.data?.data?.user?.role === "manager" ? (
                   <div className="flex items-center gap-2  text-gray-200">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -292,7 +292,7 @@ const ModifyInvoice = ({
                       onClick={toggleOpenApprove2}
                       className="block my-2 uppercase"
                     >
-                      Approve 2
+                      Approve Level 2
                     </button>
                   </div>
                 ) : (
@@ -312,7 +312,7 @@ const ModifyInvoice = ({
           // selectedCategory={selectedCategory}
           toggleOpenAddInvoices={toggleOpenAddInvoices}
           isOpenAddInvoices={isOpenAddInvoices}
-          // toggleOpenAddProduct={toggleOpenAddProduct}
+        // toggleOpenAddProduct={toggleOpenAddProduct}
         />
         <ModalUpdateDataInvoices
           selectedInvoices={selectedInvoices}

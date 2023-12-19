@@ -19,7 +19,6 @@ const ModalUpdateDataSalesDetail = ({
   //   selectedProduct,
   //   handleUpdate,
 }) => {
-  console.log("selectedSalesDetail", selectedSalesDetail);
   if (!isOpenUpdateSalesDetail) return null; // Don't render if not open or no category selected
   const dispatch = useDispatch();
 
@@ -30,9 +29,7 @@ const ModalUpdateDataSalesDetail = ({
     price: selectedSalesDetail?.data?.price || 0,
     amount: selectedSalesDetail?.data?.amount || 0,
     desc: selectedSalesDetail?.data?.desc || "",
-    status: selectedSalesDetail?.data?.status || "",
   });
-  console.log("this is dat product ", formValueSalesDetail);
 
   const products = useSelector(productSelectors.selectAll);
   const selectedProduct = useSelector((state) =>
@@ -59,7 +56,6 @@ const ModalUpdateDataSalesDetail = ({
     formData.set("price", selectedProduct?.price);
     formData.set("amount", formValueSalesDetail?.qty * selectedProduct?.price);
     formData.set("desc", formValueSalesDetail?.desc);
-    formData.set("status", formValueSalesDetail?.status);
 
     const config = {
       headers: {
@@ -114,7 +110,7 @@ const ModalUpdateDataSalesDetail = ({
           <input
             type="hidden"
             name="product_category_id"
-            // value={selectedCategory?.id}
+          // value={selectedCategory?.id}
           />
           <div className="mb-4">
             <label htmlFor="qty" className="block text-sm font-semibold mb-2">
@@ -173,22 +169,6 @@ const ModalUpdateDataSalesDetail = ({
               className="border rounded w-full py-2 px-3"
             />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="status"
-              className="block text-sm font-semibold mb-2"
-            >
-              Status:
-            </label>
-            <input
-              type="text"
-              id="status"
-              name="status"
-              value={formValueSalesDetail?.status}
-              onChange={handleChangeSalesDetail}
-              className="border rounded w-full py-2 px-3"
-            />
-          </div>
           <div className="flex justify-end">
             <button
               type="button"
@@ -198,12 +178,11 @@ const ModalUpdateDataSalesDetail = ({
               Close
             </button>
             {formValueSalesDetail?.product_id === "" ||
-            formValueSalesDetail?.sales_id === "" ||
-            formValueSalesDetail?.qty === "" ||
-            // formValueSalesDetail?.price === "" ||
-            // formValueSalesDetail?.amount === "" ||
-            formValueSalesDetail?.desc === "" ||
-            formValueSalesDetail?.status === "" ? (
+              formValueSalesDetail?.sales_id === "" ||
+              formValueSalesDetail?.qty === "" ||
+              // formValueSalesDetail?.price === "" ||
+              // formValueSalesDetail?.amount === "" ||
+              formValueSalesDetail?.desc === "" ? (
               <>
                 <button
                   type="submit"

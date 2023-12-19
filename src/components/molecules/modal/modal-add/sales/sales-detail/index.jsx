@@ -32,7 +32,7 @@ const ModalAddDataSalesDetail = ({
     price: "",
     amount: "",
     desc: "",
-    status: "",
+    // status: "",
   });
 
   const [user, setUser] = useState(getUser());
@@ -76,7 +76,7 @@ const ModalAddDataSalesDetail = ({
   }, [dispatch, selectedSales]);
 
   const updatedTotalAmount = salesDetail.reduce(
-    (total, detail) => total + detail.amount,0
+    (total, detail) => total + detail.amount, 0
   );
 
   console.log("updatedTotalAmount", updatedTotalAmount)
@@ -97,42 +97,42 @@ const ModalAddDataSalesDetail = ({
     formData.set("price", selectedProduct?.price);
     formData.set("amount", formValueSalesDetail?.qty * selectedProduct?.price);
     formData.set("desc", formValueSalesDetail?.desc);
-    formData.set("status", formValueSalesDetail?.status);
+    // formData.set("status", formValueSalesDetail?.status);
 
     await dispatch(addSalesDetail({ formData, config }));
-    
-      // Fetch updated sales details
-      await dispatch(getSalesDetailBySales(selectedSales?.data?.id));
 
-      // Calculate the updated total amount based on the existing sales details
-      const updatedTotalAmount = salesDetail.reduce(
-        (total, detail) => total + detail.amount,
-        0
-      );
-      console.log("Updated total amount:", updatedTotalAmount);
+    // Fetch updated sales details
+    await dispatch(getSalesDetailBySales(selectedSales?.data?.id));
 
-      // Create formData for updating sales total amount
-      const salesTotalAmountFormData = new FormData();
-      salesTotalAmountFormData.set("customer_id", selectedSales?.data?.customer_id);
-      salesTotalAmountFormData.set("user_id", user?.data?.data?.user?.id);
-      salesTotalAmountFormData.set("total_amount", updatedTotalAmount);
+    // Calculate the updated total amount based on the existing sales details
+    const updatedTotalAmount = salesDetail.reduce(
+      (total, detail) => total + detail.amount,
+      0
+    );
+    console.log("Updated total amount:", updatedTotalAmount);
 
-      const updateConfig = {
-        headers: {
-          "Content-type": "multipart/form-data",
-        },
-      };
+    // Create formData for updating sales total amount
+    const salesTotalAmountFormData = new FormData();
+    salesTotalAmountFormData.set("customer_id", selectedSales?.data?.customer_id);
+    salesTotalAmountFormData.set("user_id", user?.data?.data?.user?.id);
+    salesTotalAmountFormData.set("total_amount", updatedTotalAmount);
 
-      // Dispatch action to update the sales total amount
-      handleUpdate(salesTotalAmountFormData, selectedSales?.data?.id, updateConfig);
+    const updateConfig = {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    };
 
-      // Handle any necessary state updates or UI changes after adding data
-      toast.success("Add data success", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+    // Dispatch action to update the sales total amount
+    handleUpdate(salesTotalAmountFormData, selectedSales?.data?.id, updateConfig);
 
-      toggleOpenAddSalesDetail(); // Close the modal after a successful addition
+    // Handle any necessary state updates or UI changes after adding data
+    toast.success("Add data success", {
+      position: "bottom-right",
+      autoClose: 3000,
+    });
+
+    toggleOpenAddSalesDetail(); // Close the modal after a successful addition
   };
 
 
@@ -237,22 +237,6 @@ const ModalAddDataSalesDetail = ({
               className="border rounded w-full py-2 px-3"
             />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="status"
-              className="block text-sm font-semibold mb-2"
-            >
-              Status:
-            </label>
-            <input
-              type="text"
-              id="status"
-              name="status"
-              value={formValueSalesDetail?.status}
-              onChange={handleChangeSalesDetail}
-              className="border rounded w-full py-2 px-3"
-            />
-          </div>
           <div className="flex justify-end">
             <button
               type="button"
@@ -266,27 +250,27 @@ const ModalAddDataSalesDetail = ({
               formValueSalesDetail?.qty === "" ||
               // formValueSalesDetail?.price === "" ||
               // formValueSalesDetail?.amount === "" ||
-              formValueSalesDetail?.desc === "" ||
-              formValueSalesDetail?.status === "" ? (
-              <>
-                <button
-                  type="submit"
-                  disabled
-                  className="bg-slate-200 text-white px-4 py-2 rounded"
-                >
-                  Add
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="submit"
-                  className="bg-green-500 text-white px-4 py-2 rounded"
-                >
-                  Add
-                </button>
-              </>
-            )}
+              formValueSalesDetail?.desc === ""
+              ? (
+                <>
+                  <button
+                    type="submit"
+                    disabled
+                    className="bg-slate-200 text-white px-4 py-2 rounded"
+                  >
+                    Add
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded"
+                  >
+                    Add
+                  </button>
+                </>
+              )}
           </div>
         </form>
       </div>

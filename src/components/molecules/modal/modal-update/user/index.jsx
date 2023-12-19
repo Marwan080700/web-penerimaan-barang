@@ -13,6 +13,7 @@ const ModalUpdateDataUser = ({
   const [formValue, setFormValue] = useState({
     role: selectedUser?.data?.role || "",
     status: selectedUser?.data?.status || "",
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -27,6 +28,7 @@ const ModalUpdateDataUser = ({
     const formData = new FormData();
     formData.set("role", formValue?.role);
     formData.set("status", formValue?.status);
+    formData.set("password", formValue?.password)
 
     const config = {
       headers: {
@@ -57,14 +59,20 @@ const ModalUpdateDataUser = ({
               onChange={handleChange}
               className="border rounded w-full py-1 px-1"
             >
+              <option value="" hidden className="text-xs">
+                select role
+              </option>
+              <option value="superadmin" className="text-xs">
+                Superadmin
+              </option>
               <option value="manager" className="text-xs">
                 Manager
               </option>
               <option value="kabag" className="text-xs">
                 Kabag
               </option>
-              <option value="user" className="text-xs">
-                User
+              <option value="staff" className="text-xs">
+                Staff
               </option>
             </select>
           </div>
@@ -90,6 +98,24 @@ const ModalUpdateDataUser = ({
               </option>
             </select>
           </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold mb-1 text-xs"
+            >
+              change Password:
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formValue?.password}
+              onChange={handleChange}
+              className="border rounded w-full py-1 px-1"
+            />
+          </div>
+
           <div className="flex justify-end">
             <button
               type="button"

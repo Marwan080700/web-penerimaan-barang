@@ -258,18 +258,17 @@ const Invoice = () => {
         // Use Fetch API to download the PDF
         const response = await fetch(`/invoices/print/${selectedInvoices?.data?.id}`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/pdf',
-          },
         });
 
+
         if (!response.ok) {
-          console.error("Failed to download PDF:", response.statusText);
+          console.error("Failed to download PDF:", response.status, response.statusText);
           return;
         }
 
         // Convert the response to a Blob
         const pdfBlob = await response.blob();
+        console.log("PDF Blob:", pdfBlob);
 
         // Create a Blob URL and trigger download
         const blobUrl = URL.createObjectURL(pdfBlob);
