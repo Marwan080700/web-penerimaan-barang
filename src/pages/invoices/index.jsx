@@ -278,6 +278,7 @@ const Invoice = () => {
       },
     };
 
+<<<<<<< HEAD
     try {
       await dispatch(
         updateApprove2({
@@ -300,6 +301,48 @@ const Invoice = () => {
         position: "bottom-right",
         autoClose: 3000,
       });
+=======
+  const onDocumentLoadSuccess = (document) => {
+    const { numPages } = document;
+    setNumPages(numPages);
+  };
+
+
+  const onDocumentLoadError = (error) => {
+    console.error("Error loading document:", error);
+  };
+
+  const handlePrint = async () => {
+    if (selectedInvoices?.data?.id) {
+      try {
+        // Use Fetch API to download the PDF
+        const response = await fetch(`/invoices/print/${selectedInvoices?.data?.id}`, {
+          method: 'GET',
+        });
+
+
+        if (!response.ok) {
+          console.error("Failed to download PDF:", response.status, response.statusText);
+          return;
+        }
+
+        // Convert the response to a Blob
+        const pdfBlob = await response.blob();
+        console.log("PDF Blob:", pdfBlob);
+
+        // Create a Blob URL and trigger download
+        const blobUrl = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'invoice.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error("Print error:", error);
+      }
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
     }
   };
 

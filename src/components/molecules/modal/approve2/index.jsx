@@ -70,7 +70,11 @@ const ModalApprove2 = ({
                             htmlFor="approve_2_date"
                             className="block text-sm font-semibold mb-2"
                         >
+<<<<<<< HEAD
                             Date:
+=======
+                            Approve 2 Date:
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
                         </label>
                         <input
                             type="datetime-local"
@@ -86,7 +90,11 @@ const ModalApprove2 = ({
                             htmlFor="approve_2_desc"
                             className="block text-sm font-semibold mb-2"
                         >
+<<<<<<< HEAD
                             Note:
+=======
+                            Approve 2 Description:
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
                         </label>
                         <input
                             type="text"

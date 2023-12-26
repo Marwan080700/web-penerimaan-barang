@@ -149,6 +149,7 @@ const ModifyInvoice = ({
 
                 {user?.data?.data?.user?.role === "superadmin" ||
                   user?.data?.data?.user?.role === "kabag" ? (
+<<<<<<< HEAD
                   <>
                     <div className="flex items-center gap-2  text-green-500">
                       <svg
@@ -165,6 +166,23 @@ const ModifyInvoice = ({
                           d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
                         />
                       </svg>
+=======
+                  <div className="flex items-center gap-2  text-green-500">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+                      />
+                    </svg>
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
 
                       <button
                         type="button"
@@ -204,6 +222,7 @@ const ModifyInvoice = ({
                   <></>
                 )}
 
+<<<<<<< HEAD
                 {user?.data?.data?.user?.role === "superadmin" && selectedInvoices?.approve_1 === "ok" ||
                   user?.data?.data?.user?.role === "manager" && selectedInvoices?.approve_1 === "ok" ? (
                   <>
@@ -222,6 +241,25 @@ const ModifyInvoice = ({
                           d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
                         />
                       </svg>
+=======
+                {user?.data?.data?.user?.role === "superadmin" ||
+                  user?.data?.data?.user?.role === "manager" ? (
+                  <div className="flex items-center gap-2  text-green-500">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+                      />
+                    </svg>
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
 
                       <button
                         type="button"
@@ -365,6 +403,7 @@ const ModifyInvoice = ({
 
                 {user?.data?.data?.user?.role === "superadmin" ||
                   user?.data?.data?.user?.role === "kabag" ? (
+<<<<<<< HEAD
                   <>
                     <div className="flex items-center gap-2  text-slate-100">
                       <svg
@@ -417,12 +456,40 @@ const ModifyInvoice = ({
                       </button>
                     </div>
                   </>
+=======
+                  <div className="flex items-center gap-2  text-gray-200">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+                      />
+                    </svg>
+
+                    <button
+                      type="button"
+                      disabled
+                      onClick={toggleOpenApprove1}
+                      className="block my-2 uppercase"
+                    >
+                      Approve Level 1
+                    </button>
+                  </div>
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
                 ) : (
                   <></>
                 )}
 
                 {user?.data?.data?.user?.role === "superadmin" ||
                   user?.data?.data?.user?.role === "manager" ? (
+<<<<<<< HEAD
                   <>
                     <div className="flex items-center gap-2  text-slate-100">
                       <svg
@@ -475,6 +542,33 @@ const ModifyInvoice = ({
                       </button>
                     </div>
                   </>
+=======
+                  <div className="flex items-center gap-2  text-gray-200">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+                      />
+                    </svg>
+
+                    <button
+                      type="button"
+                      disabled
+                      onClick={toggleOpenApprove2}
+                      className="block my-2 uppercase"
+                    >
+                      Approve Level 2
+                    </button>
+                  </div>
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
                 ) : (
                   <>
                   </>
@@ -495,9 +589,13 @@ const ModifyInvoice = ({
           // selectedCategory={selectedCategory}
           toggleOpenAddInvoices={toggleOpenAddInvoices}
           isOpenAddInvoices={isOpenAddInvoices}
+<<<<<<< HEAD
           setIsOpen={setIsOpen}
           // toggleOpenAddProduct={toggleOpenAddProduct}
           setSelectedInovices={setSelectedInovices}
+=======
+        // toggleOpenAddProduct={toggleOpenAddProduct}
+>>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
         />
         <ModalUpdateDataInvoices
           selectedInvoices={selectedInvoices}
