@@ -83,16 +83,8 @@ export const updateApprove1 = createAsyncThunk(
         formData,
         config
       );
-      toast.success("Approve 1 success", {
-        position: "bottom-right",
-        autoClose: 3000, // Set the duration for the toast to be visible
-      });
       return response?.data?.data;
     } catch (error) {
-      toast.error("Error updating data", {
-        position: "top-right",
-        autoClose: 5000,
-      });
       throw error;
     }
   }
@@ -108,16 +100,8 @@ export const updateApprove2 = createAsyncThunk(
         formData,
         config
       );
-      toast.success("Approve 2 success", {
-        position: "bottom-right",
-        autoClose: 3000, // Set the duration for the toast to be visible
-      });
       return response?.data?.data;
     } catch (error) {
-      toast.error("Error updating data", {
-        position: "top-right",
-        autoClose: 5000,
-      });
       throw error;
     }
   }

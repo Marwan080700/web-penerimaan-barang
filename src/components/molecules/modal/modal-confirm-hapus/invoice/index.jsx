@@ -4,8 +4,18 @@ const ModalConfirmHapusInvoice = ({
   handleDelete,
   toggleOpenDeletedInvoices,
   isOpenDeteledInvoices,
+  setIsOpen,
+  setSelectedInovices,
 }) => {
   if (!isOpenDeteledInvoices) null;
+
+  const handleForDeleted = () => {
+    handleDelete(),
+      toggleOpenDeletedInvoices(),
+      setIsOpen(false),
+      setSelectedInovices(null)
+      ;
+  }
 
   return (
     <>
@@ -30,9 +40,7 @@ const ModalConfirmHapusInvoice = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    handleDelete(), toggleOpenDeletedInvoices();
-                  }}
+                  onClick={() => handleForDeleted()}
                   className="bg-red-500 text-white px-4 py-2 rounded mr-2"
                 >
                   Yes

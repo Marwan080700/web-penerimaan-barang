@@ -9,6 +9,8 @@ const ModalAddDataInvoice = ({
   isOpenAddInvoices,
   selectedCategory,
   setTriggerProduct,
+  setIsOpen,
+  setSelectedInovices,
 }) => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(getUser());
@@ -124,6 +126,8 @@ const ModalAddDataInvoice = ({
       console.log("ini form data", formData)
       // Handle any necessary state updates or UI changes after adding data
       toggleOpenAddInvoices();
+      setIsOpen(false)
+      setSelectedInovices(null)
     });
   };
 

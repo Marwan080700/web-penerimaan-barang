@@ -37,7 +37,6 @@ const ModalAddDataSales = ({
     user_id: user?.data?.data?.user?.id,
     sale_date: "",
     sale_description: "",
-    sale_status: "",
     total_amount: 0,
     // sales_id: selectedSales?.data?.id,
     // product_id: "",
@@ -95,7 +94,6 @@ const ModalAddDataSales = ({
     salesFormData.set("user_id", user?.data?.data?.user?.id);
     salesFormData.set("sale_date", formValue?.sale_date);
     salesFormData.set("sale_description", formValue?.sale_description);
-    salesFormData.set("sale_status", formValue?.sale_status);
     salesFormData.set("total_amount", formValue?.total_amount);
 
     await dispatch(addSales({ formData: salesFormData, config: salesConfig }));
@@ -231,37 +229,7 @@ const ModalAddDataSales = ({
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="sale_status"
-                  className="block text-sm font-semibold mb-1 text-xs"
-                >
-                  Sale Status:
-                </label>
-                <select
-                  id="sale_status"
-                  name="sale_status"
-                  value={formValue?.sale_status}
-                  onChange={handleChange}
-                  className="border rounded w-full py-1 px-1"
-                  required
-                >
-                  <option value="" hidden>
-                    Select Status
-                  </option>
-                  <option value="belum kirim">Belum Kirim</option>
-                  <option value="kirim"> kirim</option>
-                </select>
-                {/* <input
-              type="text"
-              id="sale_status"
-              name="sale_status"
-              value={formValue?.sale_status}
-              onChange={handleChange}
-              className="border rounded w-full py-2 px-3"
-            /> */}
-              </div>
-              <div className="">
+              {/* <div className="">
                 <label
                   htmlFor="total_amount"
                   className="block text-sm font-semibold mb-1 text-xs"
@@ -280,7 +248,7 @@ const ModalAddDataSales = ({
                   required
                   disabled
                 />
-              </div>
+              </div> */}
             </div>
             {/* <div className="border rounded px-2 py-5 relative w-[40%] h-[25rem]">
               <h3 className="absolute top-[-0.7rem] bg-white px-2">
@@ -418,11 +386,10 @@ const ModalAddDataSales = ({
               Close
             </button>
             {formValue?.delivery_order_number === "" ||
-            formValue?.customer_id === "" ||
-            formValue?.user_id === "" ||
-            formValue?.sale_date === "" ||
-            formValue?.sale_description === "" ||
-            formValue?.sale_status === "" ? (
+              formValue?.customer_id === "" ||
+              formValue?.user_id === "" ||
+              formValue?.sale_date === "" ||
+              formValue?.sale_description === "" ? (
               // formValue?.sales_id === "" ||
               // formValue?.product_id === "" ||
               // formValue?.qty === "" ||

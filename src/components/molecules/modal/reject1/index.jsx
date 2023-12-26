@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash"
 
-const ModalApprove1 = ({
-    toggleOpenApprove1,
-    isOpenApprove1,
+const ModalReject1 = ({
     selectedInvoices,
-    handleApprove1,
+    toggleOpenReject1,
+    isOpenReject1,
+    handleReject1,
     setIsOpen,
     setSelectedInovices,
-    getEnableSelected
 }) => {
-    if (!isOpenApprove1) return null; // Don't render if not open or no category selected
+    if (!isOpenReject1) return null; // Don't render if not open or no category selected
     const dispatch = useDispatch();
     const [user, setUser] = useState(getUser());
 
@@ -40,7 +39,7 @@ const ModalApprove1 = ({
     };
 
     const [formValueInvoice, setFormValueInvoice] = useState({
-        approve_1: "ok",
+        approve_1: "reject",
         approve_1_date: getCurrentDateTime(), // Set the initial value to the current date and time
         approve_1_desc: selectedInvoices?.approve_1_date || "",
     });
@@ -62,7 +61,7 @@ const ModalApprove1 = ({
     };
 
 
-    const submitApprove1 = (e) => {
+    const submitReject1 = (e) => {
         e.preventDefault();
 
 
@@ -77,18 +76,17 @@ const ModalApprove1 = ({
             },
         };
 
-        handleApprove1(formData, selectedInvoices?.id); // Ensure to pass the correct data to handleUpdate
-        toggleOpenApprove1();
+        handleReject1(formData, selectedInvoices?.id); // Ensure to pass the correct data to handleUpdate
+        toggleOpenReject1();
         setIsOpen(false)
         setSelectedInovices(null)
-        getEnableSelected(false)
     };
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-md w-[30rem]">
-                <h2 className="text-2xl mb-4 py-[0.1rem]">Approve Level 1</h2>
-                <form onSubmit={submitApprove1}>
+                <h2 className="text-2xl mb-4 py-[0.1rem]">Reject Level 1</h2>
+                <form onSubmit={submitReject1}>
                     <div>
                         {/* <div className="">
                             <label
@@ -157,7 +155,7 @@ const ModalApprove1 = ({
                     <div className="flex justify-end">
                         <button
                             type="button"
-                            onClick={toggleOpenApprove1}
+                            onClick={toggleOpenReject1}
                             className="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
                         >
                             Close
@@ -175,4 +173,4 @@ const ModalApprove1 = ({
     );
 };
 
-export default ModalApprove1;
+export default ModalReject1;

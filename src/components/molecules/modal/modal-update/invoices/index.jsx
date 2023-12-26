@@ -8,6 +8,8 @@ const ModalUpdateDataInvoices = ({
   isOpenUpdateInvoices,
   selectedInvoices,
   handleUpdate,
+  setIsOpen,
+  setSelectedInovices,
 }) => {
   if (!isOpenUpdateInvoices) return null; // Don't render if not open or no category selected
   const dispatch = useDispatch();
@@ -114,6 +116,8 @@ const ModalUpdateDataInvoices = ({
 
     handleUpdate(formData, selectedInvoices?.id); // Ensure to pass the correct data to handleUpdate
     toggleOpenUpdateInvoices();
+    setIsOpen(false)
+    setSelectedInovices(null)
   };
 
   return (

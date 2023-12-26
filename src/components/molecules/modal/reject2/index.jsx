@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash"
 
-const ModalApprove1 = ({
-    toggleOpenApprove1,
-    isOpenApprove1,
+const ModalReject2 = ({
     selectedInvoices,
-    handleApprove1,
+    toggleOpenReject2,
+    isOpenReject2,
+    handleReject2,
     setIsOpen,
     setSelectedInovices,
-    getEnableSelected
 }) => {
-    if (!isOpenApprove1) return null; // Don't render if not open or no category selected
+    if (!isOpenReject2) return null; // Don't render if not open or no category selected
     const dispatch = useDispatch();
     const [user, setUser] = useState(getUser());
 
@@ -40,16 +39,16 @@ const ModalApprove1 = ({
     };
 
     const [formValueInvoice, setFormValueInvoice] = useState({
-        approve_1: "ok",
-        approve_1_date: getCurrentDateTime(), // Set the initial value to the current date and time
-        approve_1_desc: selectedInvoices?.approve_1_date || "",
+        approve_2: "reject",
+        approve_2_date: getCurrentDateTime(), // Set the initial value to the current date and time
+        approve_2_desc: selectedInvoices?.approve_2_desc || "",
     });
 
     useEffect(() => {
         // Update the state with the current date and time when the component is loaded
         setFormValueInvoice((prevFormValue) => ({
             ...prevFormValue,
-            approve_1_date: getCurrentDateTime(),
+            approve_2_date: getCurrentDateTime(),
         }));
     }, []);
 
@@ -62,14 +61,14 @@ const ModalApprove1 = ({
     };
 
 
-    const submitApprove1 = (e) => {
+    const submitReject2 = (e) => {
         e.preventDefault();
 
 
         const formData = new FormData();
-        formData.set("approve_1", formValueInvoice?.approve_1);
-        formData.set("approve_1_date", formValueInvoice?.approve_1_date);
-        formData.set("approve_1_desc", formValueInvoice?.approve_1_desc);
+        formData.set("approve_2", formValueInvoice?.approve_2);
+        formData.set("approve_2_date", formValueInvoice?.approve_2_date);
+        formData.set("approve_2_desc", formValueInvoice?.approve_2_desc);
 
         const config = {
             headers: {
@@ -77,18 +76,17 @@ const ModalApprove1 = ({
             },
         };
 
-        handleApprove1(formData, selectedInvoices?.id); // Ensure to pass the correct data to handleUpdate
-        toggleOpenApprove1();
+        handleReject2(formData, selectedInvoices?.id); // Ensure to pass the correct data to handleUpdate
+        toggleOpenReject2();
         setIsOpen(false)
         setSelectedInovices(null)
-        getEnableSelected(false)
     };
 
     return (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-md w-[30rem]">
-                <h2 className="text-2xl mb-4 py-[0.1rem]">Approve Level 1</h2>
-                <form onSubmit={submitApprove1}>
+                <h2 className="text-2xl mb-4 py-[0.1rem]">Reject Level 2</h2>
+                <form onSubmit={submitReject2}>
                     <div>
                         {/* <div className="">
                             <label
@@ -120,32 +118,32 @@ const ModalApprove1 = ({
                             formValueInvoice?.approve_1 === "reject" ? (<> */}
                         <div className="">
                             <label
-                                htmlFor="approve_1_date"
+                                htmlFor="approve_2_date"
                                 className="block text-sm font-semibold mb-2"
                             >
                                 Date:
                             </label>
                             <input
                                 type="datetime-local"
-                                id="approve_1_date"
-                                name="approve_1_date"
-                                value={formValueInvoice?.approve_1_date}
+                                id="approve_2_date"
+                                name="approve_2_date"
+                                value={formValueInvoice?.approve_2_date}
                                 onChange={handleChangeInvoice}
                                 className="border rounded w-full mb-4 py-2 py-2"
                             />
                         </div>
                         <div className="">
                             <label
-                                htmlFor="approve_1_desc"
+                                htmlFor="approve_2_desc"
                                 className="block text-sm font-semibold mb-2"
                             >
                                 Note:
                             </label>
                             <input
                                 type="text"
-                                id="approve_1_desc"
-                                name="approve_1_desc"
-                                value={formValueInvoice?.approve_1_desc}
+                                id="approve_2_desc"
+                                name="approve_2_desc"
+                                value={formValueInvoice?.approve_2_desc}
                                 onChange={handleChangeInvoice}
                                 className="border rounded w-full mb-4 py-2 py-2"
                             />
@@ -157,7 +155,7 @@ const ModalApprove1 = ({
                     <div className="flex justify-end">
                         <button
                             type="button"
-                            onClick={toggleOpenApprove1}
+                            onClick={toggleOpenReject2}
                             className="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
                         >
                             Close
@@ -175,4 +173,4 @@ const ModalApprove1 = ({
     );
 };
 
-export default ModalApprove1;
+export default ModalReject2;

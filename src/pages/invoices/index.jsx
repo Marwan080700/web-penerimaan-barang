@@ -18,9 +18,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Document, Page } from "react-pdf";
 import { setPdfData } from "../../redux/slice/invoice";
-import { pdfjs } from 'react-pdf';
-
-
+import { pdfjs } from "react-pdf";
+import ModifyAppv1 from "../../components/atoms/button/modify/modify-invoice/modify-appv1";
+import ModifyAppv2 from "../../components/atoms/button/modify/modify-invoice/modify-appv2";
 
 const Invoice = () => {
   pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -137,12 +137,21 @@ const Invoice = () => {
     },
   ];
 
+  const [user, setUser] = useState(getUser());
+  function getUser() {
+    let user = localStorage.getItem("user");
+    if (user) {
+      user = JSON.parse(user);
+    } else {
+      user = null;
+    }
+    return user;
+  }
+
   const dispatch = useDispatch();
   const pdfData = useSelector((state) => state.invoice.pdfData);
-  // console.log("pdfData", pdfData)
   const invoice = useSelector(invoiceSelectors.selectAll);
   const [selectedInvoices, setSelectedInovices] = useState(null);
-  // console.log(selectedInvoices?.data?.id);
   const [enableSelected, getEnableSelected] = useState(true);
 
   let filterInvoice = _.filter(invoice, ["status", 0]);
@@ -150,7 +159,6 @@ const Invoice = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-
 
   const handleSearch = useCallback(
     (text) => {
@@ -167,15 +175,6 @@ const Invoice = () => {
     },
     [invoice]
   );
-
-  const blobToBase64 = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result.split(',')[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  };
 
   const handleInvoicesRowClick = (row) => {
     setSelectedInovices(row);
@@ -214,15 +213,62 @@ const Invoice = () => {
         "Content-type": "multipart/form-data",
       },
     };
-    await dispatch(
-      updateApprove1({
-        id: selectedInvoicesId,
-        formData,
-        config,
-      })
-    ).then(() => {
-      dispatch(getInvoices());
-    });
+
+    try {
+      await dispatch(
+        updateApprove1({
+          id: selectedInvoicesId,
+          formData,
+          config,
+        })
+      ).then(() => {
+        dispatch(getInvoices());
+        // Display success toast
+        toast.success("Approve Level 1 successfully!", {
+          position: "bottom-right",
+          autoClose: 3000, // Set the duration for the toast to be visible
+        });
+      });
+    } catch (error) {
+      console.error("Error approving invoice:", error);
+      // Display error toast if needed
+      toast.error("Failed to approve invoice. Please try again.", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleReject1 = async (formData, selectedInvoicesId) => {
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    };
+
+    try {
+      await dispatch(
+        updateApprove1({
+          id: selectedInvoicesId,
+          formData,
+          config,
+        })
+      ).then(() => {
+        dispatch(getInvoices());
+        // Display success toast
+        toast.success("Reject Level 1 successfully!", {
+          position: "bottom-right",
+          autoClose: 3000, // Set the duration for the toast to be visible
+        });
+      });
+    } catch (error) {
+      console.error("Error approving invoice:", error);
+      // Display error toast if needed
+      toast.error("Failed to approve invoice. Please try again.", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleApprove2 = async (formData, selectedInvoicesId) => {
@@ -231,63 +277,80 @@ const Invoice = () => {
         "Content-type": "multipart/form-data",
       },
     };
-    await dispatch(
-      updateApprove2({
-        id: selectedInvoicesId,
-        formData,
-        config,
-      })
-    ).then(() => {
-      dispatch(getInvoices());
-    });
-  };
 
-  const onDocumentLoadSuccess = (document) => {
-    const { numPages } = document;
-    setNumPages(numPages);
-  };
-
-
-  const onDocumentLoadError = (error) => {
-    console.error("Error loading document:", error);
-  };
-
-  const handlePrint = async () => {
-    if (selectedInvoices?.data?.id) {
-      try {
-        // Use Fetch API to download the PDF
-        const response = await fetch(`/invoices/print/${selectedInvoices?.data?.id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/pdf',
-          },
+    try {
+      await dispatch(
+        updateApprove2({
+          id: selectedInvoicesId,
+          formData,
+          config,
+        })
+      ).then(() => {
+        dispatch(getInvoices());
+        // Display success toast
+        toast.success("Approve Level 2 successfully!", {
+          position: "bottom-right",
+          autoClose: 3000, // Set the duration for the toast to be visible
         });
-
-        if (!response.ok) {
-          console.error("Failed to download PDF:", response.statusText);
-          return;
-        }
-
-        // Convert the response to a Blob
-        const pdfBlob = await response.blob();
-
-        // Create a Blob URL and trigger download
-        const blobUrl = URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = 'invoice.pdf';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error("Print error:", error);
-      }
+      });
+    } catch (error) {
+      console.error("Error approving invoice:", error);
+      // Display error toast if needed
+      toast.error("Failed to approve invoice. Please try again.", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
     }
   };
 
+  const handleReject2 = async (formData, selectedInvoicesId) => {
+    const config = {
+      headers: {
+        "Content-type": "multipart/form-data",
+      },
+    };
 
+    try {
+      await dispatch(
+        updateApprove2({
+          id: selectedInvoicesId,
+          formData,
+          config,
+        })
+      ).then(() => {
+        dispatch(getInvoices());
+        // Display success toast
+        toast.success("Reject Level 2 successfully!", {
+          position: "bottom-right",
+          autoClose: 3000, // Set the duration for the toast to be visible
+        });
+      });
+    } catch (error) {
+      console.error("Error approving invoice:", error);
+      // Display error toast if needed
+      toast.error("Failed to approve invoice. Please try again.", {
+        position: "bottom-right",
+        autoClose: 3000,
+      });
+    }
+  };
 
+  const openNewTab = () => {
+    if (
+      selectedInvoices?.data?.approve_1 === "ok" &&
+      selectedInvoices?.data?.approve_2 === "ok"
+    ) {
+      // const url = `https://api-penerimaanbarang-production.up.railway.app/api/v1/invoices/print/${selectedInvoices?.data?.id}`;
+      const url = `http://localhost:5000/api/v1/invoices/print/${selectedInvoices?.data?.id}`;
+      setSelectedInovices(null);
+      window.open(url, "_blank");
+    } else {
+      toast.error("Invoice belum diApprove oleh Kabag atau Manager !", {
+        position: "bottom-right",
+        autoClose: 3000, // Set the duration for the toast to be visible
+      });
+    }
+  };
 
   useEffect(() => {
     dispatch(getInvoices());
@@ -317,13 +380,45 @@ const Invoice = () => {
               value={searchText}
               onChange={(e) => handleSearch(e.target.value)}
             />
-            <ModifyInvoice
-              selectedInvoices={selectedInvoices?.data}
-              handleDelete={handleDelete}
-              handleUpdate={handleUpdate}
-              handleApprove1={handleApprove1}
-              handleApprove2={handleApprove2}
-            />
+            { }
+            {user?.data?.data?.user?.role === "kabag" ?
+              <ModifyAppv1
+                selectedInvoices={selectedInvoices?.data}
+                handleApprove1={handleApprove1}
+                handleReject1={handleReject1}
+              />
+              :
+              <ModifyInvoice
+                selectedInvoices={selectedInvoices?.data}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
+                handleApprove1={handleApprove1}
+                handleReject1={handleReject1}
+                handleApprove2={handleApprove2}
+                handleReject2={handleReject2}
+                setSelectedInovices={setSelectedInovices}
+                getEnableSelected={getEnableSelected}
+              />
+            }
+            {user?.data?.data?.user?.role === "manager" ?
+              <ModifyAppv2
+                selectedInvoices={selectedInvoices?.data}
+                handleApprove2={handleApprove2}
+                handleReject2={handleReject2}
+              />
+              :
+              <ModifyInvoice
+                selectedInvoices={selectedInvoices?.data}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
+                handleApprove1={handleApprove1}
+                handleReject1={handleReject1}
+                handleApprove2={handleApprove2}
+                handleReject2={handleReject2}
+                setSelectedInovices={setSelectedInovices}
+                getEnableSelected={getEnableSelected}
+              />
+            }
           </div>
         </div>
       </div>
@@ -343,7 +438,7 @@ const Invoice = () => {
           <button
             type="button"
             className="border rounded uppercase px-2 py-1 w-[5.5rem] shadow "
-            onClick={handlePrint}
+            onClick={openNewTab}
           >
             Print
           </button>
@@ -352,27 +447,12 @@ const Invoice = () => {
             disabled
             type="button"
             className="border rounded bg-gray-300 text-white uppercase px-2 py-1 w-[5.5rem] shadow "
-            onClick={handlePrint}
+            onClick={openNewTab}
           >
             Print
           </button>
         )}
       </div>
-      {/* PDF Viewer */}
-      {pdfData && (
-        <div className="mt-4">
-          <Document
-            file={`data:application/pdf;base64,${pdfData}`}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onDocumentLoadError}
-          >
-            <Page pageNumber={pageNumber} />
-          </Document>
-          <p>
-            Page {pageNumber} of {numPages}
-          </p>
-        </div>
-      )}
     </div>
   );
 };
