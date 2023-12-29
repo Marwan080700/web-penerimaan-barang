@@ -22,7 +22,6 @@ const ModalAddDataSalesDetail = ({
   //   toggleOpenAddProduct,
   //   selectedCategory,
 }) => {
-  console.log("ini selected nih", selectedSales?.data);
   const dispatch = useDispatch();
 
   const [formValueSalesDetail, setFormValueSalesDetail] = useState({
@@ -34,6 +33,10 @@ const ModalAddDataSalesDetail = ({
     desc: "",
     // status: "",
   });
+
+  const [forSales, setForSales] = useState(null)
+
+  // console.log("forSales", forSales)
 
   const [user, setUser] = useState(getUser());
   function getUser() {
@@ -51,8 +54,6 @@ const ModalAddDataSalesDetail = ({
     productSelectors.selectById(state, formValueSalesDetail?.product_id)
   );
   const salesDetail = useSelector(salesDetailSelectors.selectAll);
-
-  console.log("salesDetail", salesDetail);
 
   const handleChangeSalesDetail = (e) => {
     setFormValueSalesDetail({
@@ -79,7 +80,6 @@ const ModalAddDataSalesDetail = ({
     (total, detail) => total + detail.amount, 0
   );
 
-  console.log("updatedTotalAmount", updatedTotalAmount)
 
   const handleAddSalesDetail = async (e) => {
     e.preventDefault();
@@ -97,25 +97,26 @@ const ModalAddDataSalesDetail = ({
     formData.set("price", selectedProduct?.price);
     formData.set("amount", formValueSalesDetail?.qty * selectedProduct?.price);
     formData.set("desc", formValueSalesDetail?.desc);
-    // formData.set("status", formValueSalesDetail?.status);
+
 
     await dispatch(addSalesDetail({ formData, config }));
-
-    // Fetch updated sales details
     await dispatch(getSalesDetailBySales(selectedSales?.data?.id));
 
-    // Calculate the updated total amount based on the existing sales details
     const updatedTotalAmount = salesDetail.reduce(
       (total, detail) => total + detail.amount,
       0
     );
-    console.log("Updated total amount:", updatedTotalAmount);
+
+    setForSales(updatedTotalAmount);
+  };
+
+  const handleUpdateSales = async () => {
 
     // Create formData for updating sales total amount
     const salesTotalAmountFormData = new FormData();
     salesTotalAmountFormData.set("customer_id", selectedSales?.data?.customer_id);
     salesTotalAmountFormData.set("user_id", user?.data?.data?.user?.id);
-    salesTotalAmountFormData.set("total_amount", updatedTotalAmount);
+    salesTotalAmountFormData.set("total_amount", forSales);
 
     const updateConfig = {
       headers: {
@@ -131,10 +132,31 @@ const ModalAddDataSalesDetail = ({
       position: "bottom-right",
       autoClose: 3000,
     });
-
-    toggleOpenAddSalesDetail(); // Close the modal after a successful addition
+    // Close the modal after a successful addition
   };
 
+  const handleButtonClick = async (e) => {
+    e.preventDefault();
+
+    // Call both functions when the button is clicked
+    await handleAddSalesDetail(e);
+    await handleUpdateSales();
+
+    // Handle any additional logic or UI changes after adding and updating
+    toast.success("Add data and update success", {
+      position: "bottom-right",
+      autoClose: 3000,
+    });
+
+    // Close the modal after a successful addition and update
+    toggleOpenAddSalesDetail();
+  };
+
+  // useEffect(() => {
+  //   if (salesDetail) {
+  //     setForSales(updatedTotalAmount)
+  //   }
+  // }, [salesDetail])
 
 
 
@@ -144,7 +166,7 @@ const ModalAddDataSalesDetail = ({
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center">
       <div className="bg-white p-6 rounded shadow-md w-[30rem] h-fit">
         <h2 className="text-2xl mb-4">Add Data</h2>
-        <form onSubmit={handleAddSalesDetail}>
+        <form onSubmit={handleButtonClick}>
           <div className="mb-4">
             <label
               htmlFor="product_id"

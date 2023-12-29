@@ -123,11 +123,7 @@ const ModalApprove1 = ({
                                 htmlFor="approve_1_date"
                                 className="block text-sm font-semibold mb-2"
                             >
-<<<<<<< HEAD
                                 Date:
-=======
-                                Approve 1 Date:
->>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
                             </label>
                             <input
                                 type="datetime-local"
@@ -143,12 +139,8 @@ const ModalApprove1 = ({
                                 htmlFor="approve_1_desc"
                                 className="block text-sm font-semibold mb-2"
                             >
-<<<<<<< HEAD
                                 Note:
-=======
-                                Approve 1 Description:
->>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
-                            </label>
+                            </label >
                             <input
                                 type="text"
                                 id="approve_1_desc"
@@ -157,11 +149,11 @@ const ModalApprove1 = ({
                                 onChange={handleChangeInvoice}
                                 className="border rounded w-full mb-4 py-2 py-2"
                             />
-                        </div>
+                        </div >
                         {/* </>) : (<></>)
                         } */}
 
-                    </div>
+                    </div >
                     <div className="flex justify-end">
                         <button
                             type="button"
@@ -177,9 +169,9 @@ const ModalApprove1 = ({
                             Update
                         </button>
                     </div>
-                </form>
-            </div>
-        </div>
+                </form >
+            </div >
+        </div >
     );
 };
 

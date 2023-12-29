@@ -16,14 +16,11 @@ import ModifyInvoice from "../../components/atoms/button/modify/modify-invoice";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Document, Page } from "react-pdf";
-import { setPdfData } from "../../redux/slice/invoice";
-import { pdfjs } from "react-pdf";
+
 import ModifyAppv1 from "../../components/atoms/button/modify/modify-invoice/modify-appv1";
 import ModifyAppv2 from "../../components/atoms/button/modify/modify-invoice/modify-appv2";
 
 const Invoice = () => {
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
   const gridStyle = { minHeight: 200 };
   const columnCustomer = [
@@ -239,6 +236,7 @@ const Invoice = () => {
     }
   };
 
+
   const handleReject1 = async (formData, selectedInvoicesId) => {
     const config = {
       headers: {
@@ -278,7 +276,6 @@ const Invoice = () => {
       },
     };
 
-<<<<<<< HEAD
     try {
       await dispatch(
         updateApprove2({
@@ -301,50 +298,9 @@ const Invoice = () => {
         position: "bottom-right",
         autoClose: 3000,
       });
-=======
-  const onDocumentLoadSuccess = (document) => {
-    const { numPages } = document;
-    setNumPages(numPages);
-  };
-
-
-  const onDocumentLoadError = (error) => {
-    console.error("Error loading document:", error);
-  };
-
-  const handlePrint = async () => {
-    if (selectedInvoices?.data?.id) {
-      try {
-        // Use Fetch API to download the PDF
-        const response = await fetch(`/invoices/print/${selectedInvoices?.data?.id}`, {
-          method: 'GET',
-        });
-
-
-        if (!response.ok) {
-          console.error("Failed to download PDF:", response.status, response.statusText);
-          return;
-        }
-
-        // Convert the response to a Blob
-        const pdfBlob = await response.blob();
-        console.log("PDF Blob:", pdfBlob);
-
-        // Create a Blob URL and trigger download
-        const blobUrl = URL.createObjectURL(pdfBlob);
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = 'invoice.pdf';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error("Print error:", error);
-      }
->>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
     }
   };
+
 
   const handleReject2 = async (formData, selectedInvoicesId) => {
     const config = {
@@ -423,33 +379,19 @@ const Invoice = () => {
               value={searchText}
               onChange={(e) => handleSearch(e.target.value)}
             />
-            { }
-            {user?.data?.data?.user?.role === "kabag" ?
+            {user?.data?.data?.user?.role === "kabag" ? (
               <ModifyAppv1
                 selectedInvoices={selectedInvoices?.data}
                 handleApprove1={handleApprove1}
                 handleReject1={handleReject1}
               />
-              :
-              <ModifyInvoice
-                selectedInvoices={selectedInvoices?.data}
-                handleDelete={handleDelete}
-                handleUpdate={handleUpdate}
-                handleApprove1={handleApprove1}
-                handleReject1={handleReject1}
-                handleApprove2={handleApprove2}
-                handleReject2={handleReject2}
-                setSelectedInovices={setSelectedInovices}
-                getEnableSelected={getEnableSelected}
-              />
-            }
-            {user?.data?.data?.user?.role === "manager" ?
+            ) : user?.data?.data?.user?.role === "manager" ? (
               <ModifyAppv2
                 selectedInvoices={selectedInvoices?.data}
                 handleApprove2={handleApprove2}
                 handleReject2={handleReject2}
               />
-              :
+            ) : (
               <ModifyInvoice
                 selectedInvoices={selectedInvoices?.data}
                 handleDelete={handleDelete}
@@ -461,7 +403,8 @@ const Invoice = () => {
                 setSelectedInovices={setSelectedInovices}
                 getEnableSelected={getEnableSelected}
               />
-            }
+            )}
+
           </div>
         </div>
       </div>

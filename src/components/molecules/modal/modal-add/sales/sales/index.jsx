@@ -229,11 +229,7 @@ const ModalAddDataSales = ({
                   required
                 />
               </div>
-<<<<<<< HEAD
               {/* <div className="">
-=======
-              <div className="">
->>>>>>> a29c6399949d2fda2aeff2b8fa9e333f38058ef9
                 <label
                   htmlFor="total_amount"
                   className="block text-sm font-semibold mb-1 text-xs"

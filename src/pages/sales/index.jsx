@@ -95,7 +95,6 @@ const Sales = () => {
   const sales = useSelector(salesSelectors.selectAll);
   const [selectedSales, setSelectedSales] = useState(null);
   const [selectedSalesDetail, setSelectedSalesDetail] = useState(null);
-  console.log("ssss", selectedSalesDetail);
 
   const [filteredSales, setFilteredSales] = useState([]);
 
